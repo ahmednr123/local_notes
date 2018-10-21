@@ -108,7 +108,7 @@ god{
     outline: 0;
 }
 
-.note:focus{
+.note:focus-within{
     border:1px solid #f2c94e;
 }
 
