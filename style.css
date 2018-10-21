@@ -115,8 +115,11 @@ god{
 .note_head{
     color: #f2c94e;
     display: block;
-    margin-bottom: 10px;
     font-weight:800;
+}
+
+.note_body{
+    margin-top: 10px;
 }
 
 .note_tags{
