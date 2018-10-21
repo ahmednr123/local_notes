@@ -1,5 +1,3 @@
-var _global = {}
-
 function $(_element, _i){
 	if(!_element)
 		return document
@@ -29,7 +27,3 @@ let xhrRequest = function(_url, _onReady,_xhr){
 	xhr.open("GET", _url, true);
 	xhr.send();
 }
-
-_global.formHTML = '';
-
-console.log($('#username'))
