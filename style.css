@@ -1,0 +1,130 @@
+body{
+    margin:0;
+    font-family: 'Inconsolata', monospace;
+    background: #303541;
+}
+
+a, a:visited{
+    text-decoration: none;
+    color: rgb(53, 151, 184);
+}
+
+a:hover{
+    text-decoration: underline
+}
+
+god{
+    display: block;
+    width: 800px;
+    margin: 100px auto;
+    outline
+}
+
+#navbar{
+    display: flex;
+}
+
+#search_container{
+    display: flex;
+    margin-bottom: 20px;
+    justify-content: space-between;
+}
+
+#c_search{
+    padding:12px 15px;
+    background-color: rgba(0,0,0,0);
+    font-family: 'Inconsolata', monospace;
+    font-size:14px;
+    color: #f8fafd;
+    display: flex;
+    border-bottom:2px solid #393f50;
+    width: calc(100% - 70px);
+}
+
+#_search{
+    background-color: rgba(0,0,0,0);
+    font-family: 'Inconsolata', monospace;
+    border:0;
+    outline:0;
+    font-size:14px;
+    color: #f8fafd;
+    /*-webkit-box-shadow: 0px 0px 14px 1px rgba(0,0,0,0.36);
+    -moz-box-shadow: 0px 0px 14px 1px rgba(0,0,0,0.36);
+    box-shadow: 0px 0px 14px 1px rgba(0,0,0,0.36);*/
+    width: 100%;
+}
+
+#_search::placeholder {
+    color: #f8fafd;
+}
+
+#heading{
+    text-align:center;
+    font-size: 35px;
+    width:100%;
+    font-family: 'Seaweed Script', cursive;
+    color: #f8fafd;
+}
+
+#add{
+    font-size:15px;
+    font-weight: 800;
+    color: olivedrab;
+    border: 1px solid olivedrab;
+    height:20px;
+    width:20px;
+    border-radius: 50%;
+    margin-top: 26px;
+    margin-left: 20px;
+}
+
+#add_icon{
+    margin-top: 1px;
+    margin-left: 5px;
+}
+
+#create{
+    font-size:14px;
+    float: right;
+    color: olivedrab;
+    border: 1px solid olivedrab;
+    padding: 6px 12px;
+    border-radius: 6px;
+}
+
+.note{
+    position: relative;
+    border-radius: 7px;
+    padding: 20px;
+    font-size: 16px;
+    color: #f8fafd;
+    background-color: #393f50;
+    border:1px solid #393f50;
+    margin-bottom:20px;
+    outline:0;
+}
+
+.note:focus{
+    border:1px solid #f2c94e;
+}
+
+.note_head{
+    color: #f2c94e;
+    display: block;
+    margin-bottom: 10px;
+    font-weight:800;
+}
+
+.note_tags{
+    display: block;
+    margin-top: 10px;
+}
+
+.hashtag{
+    color:#4bc3f1;
+    margin-right: 10px;
+}
+
+.hashtag:before{
+    content:"#";
+}
