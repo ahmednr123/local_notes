@@ -17,7 +17,7 @@ god{
     display: block;
     width: 800px;
     margin: 100px auto;
-    outline
+    outline:none;
 }
 
 #navbar{
