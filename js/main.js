@@ -28,6 +28,15 @@ let _global = {notes:[]}
 
 _global.notes = {"a01":{heading: "Hello this is a note!", body: ["Apparently we had reached a great height in the atmosphere, for the sky was a dead black, and the stars had ceased to twinkle. By the same illusion which lifts the horizon of the sea to the level of the spectator on a hillside, the sable cloud beneath was dished out."], tags: ["illusion"]}};
 
+function textarea_autoadjust(){
+	$forEach('textarea', (el) => {
+		el.addEventListener('keyup', () => {
+			el.style.height = '1px'
+        	el.style.height = (el.scrollHeight) + 'px';
+		})
+	})
+}
+
 function make_editable (id) {
     let note = _global.notes[id]
     let note_html = $('#'+id).childNodes[1];
@@ -46,7 +55,9 @@ function make_editable (id) {
     })
     
     _global.focused_note = id;
-    $('#'+id).focus();
+    $('#'+id).style.border = "1px solid #f2c94e";
+
+    textarea_autoadjust();
 }
 
 function make_html (id, note) {
@@ -69,7 +80,7 @@ function make_html (id, note) {
 
 _global.focused_note = '';
 
-document.addEventListener('click', (el) => {
+document.addEventListener('dblclick', (el) => {
     if(el.target.hasAttribute('note') && _global.focused_note != el.target.getAttribute('note'))
         make_editable(el.target.getAttribute('note'));
 })
@@ -94,6 +105,8 @@ $forEach('.note', (el) => {
         tags = tags.split();
         tags = tags.map((tag) => tag.slice(1, tag.length));
         note.tags = tags;
+
+        el.style.border = "1px solid #393f50";
         
         make_html(id, note);
     });
@@ -103,17 +116,16 @@ $forEach('.note', (el) => {
 // ID structure: bnote:[id]
 // Local storage
 
-function saveNote (id, heading, body, tags) {
+function saveNote (id, note) {
 	if(!window.localStorage.getItem(id)){
-		let note = {heading, body, tags}
 		window.localStorage.setItem(id, JSON.stringify(note))
 		return
 	}
 
 	let noteJson = JSON.parse(window.localStorage.getItem(id))
-	noteJson.heading = heading
-	noteJson.body = body
-	noteJson.tags = tags
+	noteJson.heading = note.heading
+	noteJson.body = note.body
+	noteJson.tags = note.tags
 
 	window.localStorage.setItem(id, JSON.stringify(noteJson))
 }
