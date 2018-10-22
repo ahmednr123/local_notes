@@ -112,14 +112,45 @@ god{
     border:1px solid #f2c94e;
 }
 
+textarea{
+    border:none;
+    outline:none;
+    background:transparent;
+    resize:none;
+    width:100%;
+    font-size:16px;
+    padding:0;
+    font-family: 'Inconsolata', monospace;
+    overflow:hidden;
+    margin-top:7px;
+}
+
+.content > textarea:first-child{
+    margin-top:0px;
+}
+
+.content > span:last-child{
+    padding-bottom: 3px;
+}
+
+.note_head_textarea{
+    color: #f2c94e;
+    font-weight:800;
+}
+
+.note_parah_textarea{
+    color:white;
+}
+
 .note_head{
     color: #f2c94e;
     display: block;
     font-weight:800;
 }
 
-.note_body{
+.note_parah{
     margin-top: 10px;
+    display: block;
 }
 
 .note_tags{

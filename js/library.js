@@ -27,4 +27,3 @@ let xhrRequest = function(_url, _onReady,_xhr){
 	xhr.open("GET", _url, true);
 	xhr.send();
 }
-
