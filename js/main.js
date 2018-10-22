@@ -112,9 +112,17 @@ $forEach('.note', (el) => {
     });
 })
 
-// Notes structure: [ID]:{heading, body, tags}
-// ID structure: bnote:[id]
-// Local storage
+
+/*
+	NOTES STRUCTURE 
+	=====================================
+	[ID]:{heading, body, tags}
+
+
+	ID STRUCTURE 
+	=====================================
+	bnote:[id]
+*/
 
 function saveNote (id, note) {
 	if(!window.localStorage.getItem(id)){
