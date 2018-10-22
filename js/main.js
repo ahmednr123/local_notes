@@ -29,7 +29,7 @@ let _global = {notes:[]}
 _global.notes = {"a01":{heading: "Hello this is a note!", body: ["Apparently we had reached a great height in the atmosphere, for the sky was a dead black, and the stars had ceased to twinkle. By the same illusion which lifts the horizon of the sea to the level of the spectator on a hillside, the sable cloud beneath was dished out."], tags: ["illusion"]}};
 
 function make_editable (id) {
-    let note = _global.notes['a01']
+    let note = _global.notes[id]
     let note_html = $('#'+id).childNodes[1];
     let html = '';
     
@@ -50,7 +50,7 @@ function make_editable (id) {
 }
 
 function make_html (id, note) {
-    let _note = _global.notes['a01']
+    let _note = _global.notes[id]
     let note_html = $('#'+id).childNodes[1];
     let html = '';
     
@@ -78,15 +78,15 @@ $forEach('.note', (el) => {
     el.addEventListener('focusout', () => {
         let id = el.id;
         console.log('[focusout] ID: '+id)
-        let textareas = el.childNodes[1].childNodes;
+        let textareas = el.childNodes[1].getElementsByTagName('textarea');
         
         let note = {heading:'', body:[], tags:[]}
         
-        note.heading = textareas[0].innerHTML;
+        note.heading = textareas[0].value;
         
         if(textareas.length > 1){
             for(let i = 1; i < textareas.length; i++){
-                note['body'].push(textareas[i].innerHTML)
+                note['body'].push(textareas[i].value)
             }
         }
         
