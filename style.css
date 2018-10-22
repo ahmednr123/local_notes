@@ -118,8 +118,9 @@ god{
     font-weight:800;
 }
 
-.note_body{
+.note_parah{
     margin-top: 10px;
+    display: block;
 }
 
 .note_tags{

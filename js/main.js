@@ -24,3 +24,11 @@
     ====================================================
 */
 
+let _global = {notes:[]}
+
+_global.notes = [{}];
+
+document.addEventListener('click', (el) => {
+    let content = $('#'+el.target.getAttribute('note')).childNodes[1];
+    content.innerHTML = '';
+})
