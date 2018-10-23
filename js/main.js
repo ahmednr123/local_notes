@@ -24,9 +24,7 @@
     ====================================================
 */
 
-let _global = {
-    notes: []
-}
+let _global = {}
 
 _global.active = true;
 _global.focused_note = '';
@@ -47,8 +45,15 @@ function newNote() {
     }
 }
 
+// To avoid focusout trigger
+function tunnel(func) {
+    _global.active = false;
+    func();
+    _global.active = true;
+}
+
 function insertAfter(newNode, referenceNode) {
-    referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+    return referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
 }
 
 function new_textarea(id, target) {
@@ -58,15 +63,14 @@ function new_textarea(id, target) {
     textareaNode.setAttribute("note", id);
     textareaNode.setAttribute("tabindex", "-1");
 
-    $('#' + id).childNodes[1].appendChild(textareaNode);
+    let newTextarea = insertAfter(textareaNode, target);
 
-    let textareas = $('#' + id).childNodes[1].getElementsByTagName('textarea');
-    _global.active = false;
-    textareas[textareas.length - 1].style.height = '17px';
-    textareas[textareas.length - 1].focus();
-    _global.active = true;
+    tunnel(() => {
+        newTextarea.style.height = '17px';
+        newTextarea.focus();
+    });
 
-    autoadjust(textareas[textareas.length - 1]);
+    autoadjust(newTextarea);
 }
 
 function autoadjust(el) {
@@ -74,17 +78,17 @@ function autoadjust(el) {
         if (e.keyCode == 13) {
             e.preventDefault();
         } else if (el.value.length == 0 && e.keyCode == 8) {
-            _global.active = false;
-            e.preventDefault();
-            e.target.previousSibling.focus();
-            e.target.remove();
-            _global.active = true;
+            tunnel(() => {
+                e.preventDefault();
+                e.target.previousSibling.focus();
+                e.target.remove();
+            });
         }
     })
     el.addEventListener('keyup', (e) => {
         if (el.value.length > 1 && e.keyCode == 13) {
             let id = el.getAttribute('note');
-            new_textarea(id);
+            new_textarea(id, el);
         } else {
             el.style.height = '1px'
             el.style.height = (el.scrollHeight) + 'px';
