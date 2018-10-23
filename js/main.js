@@ -55,11 +55,11 @@ function new_textarea(id) {
 }
 
 function autoadjust(el) {
-	el.addEventListener('keydown', (e) => {
-		if(e.keyCode == 13)
-			e.preventDefault();
-	})
-	el.addEventListener('keyup', (e) => {
+    el.addEventListener('keydown', (e) => {
+        if (e.keyCode == 13)
+            e.preventDefault();
+    })
+    el.addEventListener('keyup', (e) => {
         if (el.value.length > 1 && e.keyCode == 13) {
             let id = el.getAttribute('note');
             new_textarea(id);
