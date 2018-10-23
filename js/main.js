@@ -29,6 +29,7 @@ let _global = {
 }
 
 _global.active = true;
+_global.focused_note = '';
 
 _global.notes = {
     "a01": {
@@ -38,13 +39,27 @@ _global.notes = {
     }
 };
 
-function new_textarea(id) {
+function newNote() {
+    return {
+        heading: "",
+        body: [],
+        tags: []
+    }
+}
+
+function insertAfter(newNode, referenceNode) {
+    referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+}
+
+function new_textarea(id, target) {
     let textareaNode = document.createElement("textarea");
     textareaNode.setAttribute("class", "note_parah_textarea");
+    textareaNode.setAttribute("spellcheck", "false");
     textareaNode.setAttribute("note", id);
     textareaNode.setAttribute("tabindex", "-1");
 
     $('#' + id).childNodes[1].appendChild(textareaNode);
+
     let textareas = $('#' + id).childNodes[1].getElementsByTagName('textarea');
     _global.active = false;
     textareas[textareas.length - 1].style.height = '17px';
@@ -56,14 +71,20 @@ function new_textarea(id) {
 
 function autoadjust(el) {
     el.addEventListener('keydown', (e) => {
-        if (e.keyCode == 13)
+        if (e.keyCode == 13) {
             e.preventDefault();
+        } else if (el.value.length == 0 && e.keyCode == 8) {
+            _global.active = false;
+            e.preventDefault();
+            e.target.previousSibling.focus();
+            e.target.remove();
+            _global.active = true;
+        }
     })
     el.addEventListener('keyup', (e) => {
         if (el.value.length > 1 && e.keyCode == 13) {
             let id = el.getAttribute('note');
             new_textarea(id);
-            return false;
         } else {
             el.style.height = '1px'
             el.style.height = (el.scrollHeight) + 'px';
@@ -76,10 +97,10 @@ function make_editable(id) {
     let note_html = $('#' + id).childNodes[1];
     let html = '';
 
-    html += '<textarea class="note_head_textarea" note="' + id + '">' + note.heading + '</textarea>'
+    html += '<textarea class="note_head_textarea" spellcheck="false" tabindex="-1" note="' + id + '">' + note.heading + '</textarea>'
 
     for (let parah of note.body)
-        html += '<textarea class="note_parah_textarea" note="' + id + '">' + parah + '</textarea>'
+        html += '<textarea class="note_parah_textarea" spellcheck="false" tabindex="-1" note="' + id + '">' + parah + '</textarea>'
 
     note_html.innerHTML = html;
 
@@ -114,8 +135,6 @@ function make_html(id, note) {
     _global.focused_note = '';
 }
 
-_global.focused_note = '';
-
 document.addEventListener('dblclick', (el) => {
     if (el.target.hasAttribute('note') && _global.focused_note != el.target.getAttribute('note'))
         make_editable(el.target.getAttribute('note'));
@@ -128,11 +147,7 @@ $forEach('.note', (el) => {
             console.log('[focusout] ID: ' + id)
             let textareas = el.childNodes[1].getElementsByTagName('textarea');
 
-            let note = {
-                heading: '',
-                body: [],
-                tags: []
-            }
+            let note = newNote();
 
             note.heading = textareas[0].value;
 
