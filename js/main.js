@@ -69,6 +69,7 @@ function new_textarea(id, target, text) {
 
     tunnel(() => {
         newTextarea.style.height = '17px';
+        newTextarea.style.height = (newTextarea.scrollHeight) + 'px';
         newTextarea.focus();
     });
 
@@ -81,7 +82,8 @@ function autoadjust(el) {
             let id = el.getAttribute('note');
             let text = splitTextarea(el);
             new_textarea(id, el, text);
-
+            el.style.height = '1px'
+            el.style.height = (el.scrollHeight) + 'px';
             e.preventDefault();
         } else if (el.selectionStart == 0 && e.keyCode == 8) {
             let text = el.value;
@@ -89,11 +91,14 @@ function autoadjust(el) {
                 e.preventDefault();
                 let pointer = el.previousSibling.value.length;
                 el.previousSibling.value += text;
+                el.previousSibling.style.height = '1px'
+                el.previousSibling.style.height = (el.scrollHeight) + 'px';
                 el.previousSibling.focus();
                 el.previousSibling.setSelectionRange(pointer, pointer);
                 el.remove();
             });
         }
+
     })
     el.addEventListener('keyup', (e) => {
         el.style.height = '1px'
