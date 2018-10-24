@@ -29,6 +29,9 @@ let _global = {}
 _global.active = true;
 _global.focused_note = '';
 
+_global.tag_buff = '';
+_global.tag_writer = false;
+
 _global.notes = {
     "a01": {
         heading: "Hello this is a note!",
@@ -78,24 +81,52 @@ function new_textarea(id, target, text) {
 
 function autoadjust(el) {
     el.addEventListener('keydown', (e) => {
+        //====TAG handler====//
+        if (e.key == '#')
+            _global.tag_writer = true;
+        //==================//
+
         if (el.value.length > 1 && e.keyCode == 13) {
             let id = el.getAttribute('note');
             let text = splitTextarea(el);
             new_textarea(id, el, text);
+
             el.style.height = '1px'
             el.style.height = (el.scrollHeight) + 'px';
+
             e.preventDefault();
         } else if (el.selectionStart == 0 && e.keyCode == 8) {
+            //====TAG handler====//
+            if (_global.tag_buff.length > 0)
+                _global.tag_buff = _global.tag_buff.substring(0, _global.tag_buff.length - 1);
+            //==================//
+
             let text = el.value;
             tunnel(() => {
                 e.preventDefault();
                 let pointer = el.previousSibling.value.length;
                 el.previousSibling.value += text;
+
                 el.previousSibling.style.height = (el.previousSibling.scrollHeight) + 'px';
+
                 el.previousSibling.focus();
                 el.previousSibling.setSelectionRange(pointer, pointer);
                 el.remove();
             });
+        } else {
+            //====TAG handler====//
+
+            if (_global.tag_writer) {
+                _global.tag_buff += e.key;
+
+                if (e.keyCode == 32 || e.keyCode == 13) {
+                    _global.tag_writer = false;
+                    _global.notes[_global.focused_note].tags.push(_global.tag_buff);
+                    console.log(_global.tag_buff);
+                }
+            }
+
+            //===================//
         }
 
     })
