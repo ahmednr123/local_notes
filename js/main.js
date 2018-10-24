@@ -29,8 +29,10 @@ let _global = {}
 _global.active = true;
 _global.focused_note = '';
 
+//=======TAG handler=======//
 _global.tag_buff = '';
 _global.tag_writer = false;
+//=========================//
 
 _global.notes = {
     "a01": {
