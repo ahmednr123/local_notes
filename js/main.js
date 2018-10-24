@@ -91,8 +91,7 @@ function autoadjust(el) {
                 e.preventDefault();
                 let pointer = el.previousSibling.value.length;
                 el.previousSibling.value += text;
-                el.previousSibling.style.height = '1px'
-                el.previousSibling.style.height = (el.scrollHeight) + 'px';
+                el.previousSibling.style.height = (el.previousSibling.scrollHeight) + 'px';
                 el.previousSibling.focus();
                 el.previousSibling.setSelectionRange(pointer, pointer);
                 el.remove();
