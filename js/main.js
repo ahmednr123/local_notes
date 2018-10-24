@@ -56,7 +56,7 @@ function insertAfter(newNode, referenceNode) {
     return referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
 }
 
-function new_textarea(id, target) {
+function new_textarea(id, target, text) {
     let textareaNode = document.createElement("textarea");
     textareaNode.setAttribute("class", "note_parah_textarea");
     textareaNode.setAttribute("spellcheck", "false");
@@ -64,6 +64,8 @@ function new_textarea(id, target) {
     textareaNode.setAttribute("tabindex", "-1");
 
     let newTextarea = insertAfter(textareaNode, target);
+    newTextarea.value = text;
+    newTextarea.setSelectionRange(0, 0);
 
     tunnel(() => {
         newTextarea.style.height = '17px';
@@ -75,24 +77,27 @@ function new_textarea(id, target) {
 
 function autoadjust(el) {
     el.addEventListener('keydown', (e) => {
-        if (e.keyCode == 13) {
+        if (el.value.length > 1 && e.keyCode == 13) {
+            let id = el.getAttribute('note');
+            let text = splitTextarea(el);
+            new_textarea(id, el, text);
+
             e.preventDefault();
-        } else if (el.value.length == 0 && e.keyCode == 8) {
+        } else if (el.selectionStart == 0 && e.keyCode == 8) {
+            let text = el.value;
             tunnel(() => {
                 e.preventDefault();
-                e.target.previousSibling.focus();
-                e.target.remove();
+                let pointer = el.previousSibling.value.length;
+                el.previousSibling.value += text;
+                el.previousSibling.focus();
+                el.previousSibling.setSelectionRange(pointer, pointer);
+                el.remove();
             });
         }
     })
     el.addEventListener('keyup', (e) => {
-        if (el.value.length > 1 && e.keyCode == 13) {
-            let id = el.getAttribute('note');
-            new_textarea(id, el);
-        } else {
-            el.style.height = '1px'
-            el.style.height = (el.scrollHeight) + 'px';
-        }
+        el.style.height = '1px'
+        el.style.height = (el.scrollHeight) + 'px';
     })
 }
 
@@ -137,6 +142,18 @@ function make_html(id, note) {
 
     note_html.innerHTML = html;
     _global.focused_note = '';
+}
+
+function splitTextarea(el) {
+    let selection = {
+        'start': el.selectionStart,
+        'end': el.value.length
+    }
+
+    let substring = el.value.substring(selection.start, selection.end);
+    el.value = el.value.substring(0, selection.start);
+
+    return substring;
 }
 
 document.addEventListener('dblclick', (el) => {
@@ -196,6 +213,7 @@ function saveNote(id, note) {
     noteJson.body = note.body
     noteJson.tags = note.tags
 
+    _global.notes[id]
     window.localStorage.setItem(id, JSON.stringify(noteJson))
 }
 
