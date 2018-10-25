@@ -106,6 +106,7 @@ function autoadjust(el) {
 
     })
     el.addEventListener('keyup', (e) => {
+        // UPDATE _global.notes on every key press
         updateTags(getHashtags(), el.getAttribute('note'))
         el.style.height = '1px'
         el.style.height = (el.scrollHeight) + 'px';
@@ -113,11 +114,11 @@ function autoadjust(el) {
 }
 
 function updateTags(arr, note_id) {
-    let tag_element = $('#'+note_id).getElementsByClassName('note_tags')[0];
+    let tag_element = $('#' + note_id).getElementsByClassName('note_tags')[0];
     tag_element.innerHTML = '';
-    for(let i = 0; i < arr.length; i++){
+    for (let i = 0; i < arr.length; i++) {
         let tag = arr[i];
-        tag_element.innerHTML += '<span class="hashtag" note="'+ note_id +'" >' + tag + '</span>';
+        tag_element.innerHTML += '<span class="hashtag" note="' + note_id + '" >' + tag + '</span>';
     }
 }
 
@@ -125,20 +126,18 @@ function getHashtags() {
     let note_id = _global.focused_note;
     let parahs = _global.notes[note_id].body;
     let text = parahs.join(' ');
-    
-    console.log(text);
-    
+
     let arr = [];
     let buffer = '';
     let hash = false;
-    
-    for(let i = 0; i < text.length; i++){
-        if(text[i] == '#'){
+
+    for (let i = 0; i < text.length; i++) {
+        if (text[i] == '#') {
             hash = true;
             continue;
         }
         if (hash) {
-            if(text[i] != ' ')
+            if (text[i] != ' ')
                 buffer += text[i];
             else {
                 arr.push(buffer);
@@ -147,7 +146,7 @@ function getHashtags() {
             }
         }
     }
-    
+
     return arr;
 }
 
