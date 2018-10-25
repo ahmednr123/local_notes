@@ -106,14 +106,28 @@ function autoadjust(el) {
 
     })
     el.addEventListener('keyup', (e) => {
-        console.log(getHashtags(el));
+        updateTags(getHashtags(), el.getAttribute('note'))
         el.style.height = '1px'
         el.style.height = (el.scrollHeight) + 'px';
     })
 }
 
-function getHashtags(el) {
-    let text = el.value;
+function updateTags(arr, note_id) {
+    let tag_element = $('#'+note_id).getElementsByClassName('note_tags')[0];
+    tag_element.innerHTML = '';
+    for(let i = 0; i < arr.length; i++){
+        let tag = arr[i];
+        tag_element.innerHTML += '<span class="hashtag" note="'+ note_id +'" >' + tag + '</span>';
+    }
+}
+
+function getHashtags() {
+    let note_id = _global.focused_note;
+    let parahs = _global.notes[note_id].body;
+    let text = parahs.join(' ');
+    
+    console.log(text);
+    
     let arr = [];
     let buffer = '';
     let hash = false;
