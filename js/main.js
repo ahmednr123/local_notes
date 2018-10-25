@@ -107,6 +107,12 @@ function autoadjust(el) {
     })
     el.addEventListener('keyup', (e) => {
         // UPDATE _global.notes on every key press
+        let textareas = el.parentNode.getElementsByTagName('textarea');
+        let note_id = el.getAttribute('note');
+        _global.notes[note_id].body = []
+        for (let i = 1; i < textareas.length; i++) {
+            _global.notes[notes_id].body.push(textareas[i].value);
+        }
         updateTags(getHashtags(), el.getAttribute('note'))
         el.style.height = '1px'
         el.style.height = (el.scrollHeight) + 'px';
@@ -125,24 +131,25 @@ function updateTags(arr, note_id) {
 function getHashtags() {
     let note_id = _global.focused_note;
     let parahs = _global.notes[note_id].body;
-    let text = parahs.join(' ');
 
     let arr = [];
     let buffer = '';
     let hash = false;
 
-    for (let i = 0; i < text.length; i++) {
-        if (text[i] == '#') {
-            hash = true;
-            continue;
-        }
-        if (hash) {
-            if (text[i] != ' ')
-                buffer += text[i];
-            else {
-                arr.push(buffer);
-                buffer = '';
-                hash = false;
+    for (let text of parahs) {
+        for (let i = 0; i < text.length; i++) {
+            if (text[i] == '#') {
+                hash = true;
+                continue;
+            }
+            if (hash) {
+                if (text[i] != ' ')
+                    buffer += text[i];
+                else {
+                    arr.push(buffer);
+                    buffer = '';
+                    hash = false;
+                }
             }
         }
     }
