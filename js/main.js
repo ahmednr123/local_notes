@@ -29,11 +29,6 @@ let _global = {}
 _global.active = true;
 _global.focused_note = '';
 
-//=======TAG handler=======//
-_global.tag_buff = '';
-_global.tag_writer = false;
-//=========================//
-
 _global.notes = {
     "a01": {
         heading: "Hello this is a note!",
@@ -83,10 +78,6 @@ function new_textarea(id, target, text) {
 
 function autoadjust(el) {
     el.addEventListener('keydown', (e) => {
-        //====TAG handler====//
-        if (e.key == '#')
-            _global.tag_writer = true;
-        //==================//
 
         if (el.value.length > 1 && e.keyCode == 13) {
             let id = el.getAttribute('note');
@@ -98,10 +89,6 @@ function autoadjust(el) {
 
             e.preventDefault();
         } else if (el.selectionStart == 0 && e.keyCode == 8) {
-            //====TAG handler====//
-            if (_global.tag_buff.length > 0)
-                _global.tag_buff = _global.tag_buff.substring(0, _global.tag_buff.length - 1);
-            //==================//
 
             let text = el.value;
             tunnel(() => {
@@ -115,27 +102,39 @@ function autoadjust(el) {
                 el.previousSibling.setSelectionRange(pointer, pointer);
                 el.remove();
             });
-        } else {
-            //====TAG handler====//
-
-            if (_global.tag_writer) {
-                _global.tag_buff += e.key;
-
-                if (e.keyCode == 32 || e.keyCode == 13) {
-                    _global.tag_writer = false;
-                    _global.notes[_global.focused_note].tags.push(_global.tag_buff);
-                    console.log(_global.tag_buff);
-                }
-            }
-
-            //===================//
         }
 
     })
     el.addEventListener('keyup', (e) => {
+        console.log(getHashtags(el));
         el.style.height = '1px'
         el.style.height = (el.scrollHeight) + 'px';
     })
+}
+
+function getHashtags(el) {
+    let text = el.value;
+    let arr = [];
+    let buffer = '';
+    let hash = false;
+    
+    for(let i = 0; i < text.length; i++){
+        if(text[i] == '#'){
+            hash = true;
+            continue;
+        }
+        if (hash) {
+            if(text[i] != ' ')
+                buffer += text[i];
+            else {
+                arr.push(buffer);
+                buffer = '';
+                hash = false;
+            }
+        }
+    }
+    
+    return arr;
 }
 
 function make_editable(id) {
