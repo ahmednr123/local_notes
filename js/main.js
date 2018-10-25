@@ -106,21 +106,27 @@ function autoadjust(el) {
 
     })
     el.addEventListener('keyup', (e) => {
-        // UPDATE _global.notes on every key press
+        //=======saveNote()========//
         let textareas = el.parentNode.getElementsByTagName('textarea');
-        let note_id = el.getAttribute('note');
-        _global.notes[note_id].body = []
+        let note_id = el.getAttribute('note'); // BUILD A FUNCTION TO RETRIEVE CURRENT NOTE ID
+        _global.notes[note_id].body = [];
+        _global.notes[note_id].heading = textareas[0].value;
         for (let i = 1; i < textareas.length; i++) {
-            _global.notes[notes_id].body.push(textareas[i].value);
+            _global.notes[note_id].body.push(textareas[i].value);
         }
-        updateTags(getHashtags(), el.getAttribute('note'))
+        // UPDATE saveNote() AND USE THAT INSTEAD
+        //=========================//
+        updateTags(el.getAttribute('note'))
         el.style.height = '1px'
         el.style.height = (el.scrollHeight) + 'px';
     })
 }
 
-function updateTags(arr, note_id) {
+// CLEAN UP
+function updateTags(note_id) {
+    let arr = getHashtags();
     let tag_element = $('#' + note_id).getElementsByClassName('note_tags')[0];
+    _global.notes[note_id].tags = arr;
     tag_element.innerHTML = '';
     for (let i = 0; i < arr.length; i++) {
         let tag = arr[i];
@@ -130,25 +136,26 @@ function updateTags(arr, note_id) {
 
 function getHashtags() {
     let note_id = _global.focused_note;
-    let parahs = _global.notes[note_id].body;
+    let content = [_global.notes[note_id].heading];
+    content = content.concat(_global.notes[note_id].body);
 
     let arr = [];
     let buffer = '';
     let hash = false;
 
-    for (let text of parahs) {
-        for (let i = 0; i < text.length; i++) {
+    for (let text of content) {
+        for (let i = 0; i <= text.length; i++) {
             if (text[i] == '#') {
                 hash = true;
                 continue;
             }
             if (hash) {
-                if (text[i] != ' ')
-                    buffer += text[i];
-                else {
+                if (!/^[a-z0-9]+$/i.test(text[i]) || i == text.length) {
                     arr.push(buffer);
                     buffer = '';
                     hash = false;
+                } else {
+                    buffer += text[i];
                 }
             }
         }
