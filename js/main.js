@@ -34,7 +34,7 @@ _global.notes = {
         heading: "Hello this is a note!",
         body: ["Apparently we had reached a great height in the atmosphere, for the sky was a dead black, and the stars had ceased to twinkle. By the same illusion which lifts the horizon of the sea to the level of the spectator on a hillside, the sable cloud beneath was dished out."],
         tags: ["illusion"]
-    }
+    },
 };
 
 function newNote() {
@@ -123,15 +123,37 @@ function autoadjust(el) {
 }
 
 function createNote() {
-    let note_id = 0 // Setup _global meta data for notes and extract next ID
+    let note_id = "a03" // Setup _global meta data for notes and extract next ID
     let note_elm = document.createElement('div');
     note_elm.setAttribute('class', 'note');
     note_elm.setAttribute('id', note_id);
-    note_elm.innerHTML = "<div class='content' note='" + note_id + "'><span class='note_head'>...</span></div>"
+    note_elm.innerHTML = "<div class='content' note='" + note_id + "'></div>"
+
+    // Heading textarea (Change the newTextarea() function
+    let textareaNode = document.createElement("textarea");
+    textareaNode.setAttribute("class", "note_head_textarea");
+    textareaNode.setAttribute("spellcheck", "false");
+    textareaNode.setAttribute("note", note_id);
+    textareaNode.setAttribute("tabindex", "-1");
+
+    let newTextarea = note_elm.getElementsByClassName('content')[0].appendChild(textareaNode);
+    // ==================== //
+        
+    _global.notes[note_id] = newNote();
 
     $('#notes').insertBefore(note_elm, $('#notes').childNodes[0]);
     //autoadjust(note_elm);
-    note_funcs(note_elm);
+    noteListener(note_elm);
+    
+    // newTextarea
+    tunnel(() => {
+        newTextarea.style.height = '17px';
+        _global.focused_note = note_id;
+        newTextarea.focus();
+    });
+
+    autoadjust(newTextarea);
+    // ============ 
 
     return note_elm;
 }
@@ -139,6 +161,20 @@ function createNote() {
 // CLEAN UP
 function updateTags(note_id) {
     let arr = getHashtags();
+    
+    if(arr.length > 0){
+        if(!$('#'+note_id).getElementsByClassName('note_tags')[0]){
+            let tag_elem = document.createElement('span');
+            tag_elem.setAttribute('class', 'note_tags');
+            tag_elem.setAttribute('note', note_id);
+            $('#'+note_id).appendChild(tag_elem);
+        }
+    } else {
+        if($('#'+note_id).getElementsByClassName('note_tags')[0])
+            $('#'+note_id).getElementsByClassName('note_tags')[0].remove();
+        return;
+    }
+    
     let tag_element = $('#' + note_id).getElementsByClassName('note_tags')[0];
     _global.notes[note_id].tags = arr;
     tag_element.innerHTML = '';
@@ -180,7 +216,7 @@ function getHashtags() {
 
 function make_editable(id) {
     let note = _global.notes[id]
-    let note_html = $('#' + id).childNodes[1];
+    let note_html = $('#'+id).getElementsByClassName('content')[0];
     let html = '';
 
     html += '<textarea class="note_head_textarea" spellcheck="false" tabindex="-1" note="' + id + '">' + note.heading + '</textarea>'
@@ -205,7 +241,7 @@ function make_editable(id) {
 
 function make_html(id, note) {
     let _note = _global.notes[id]
-    let note_html = $('#' + id).childNodes[1];
+    let note_html = $('#' + id).getElementsByClassName('content')[0];
     let html = '';
 
     _note.heading = note.heading;
@@ -237,21 +273,19 @@ $('#new_note').addEventListener('click', () => {
     createNote();
 });
 
-function note_funcs(el) {
-    if (el.hasAttribute('note') && _global.focused_note != el.getAttribute('note'))
-        make_editable(el.getAttribute('note'));
-}
-
 document.addEventListener('dblclick', (el) => {
-    note_funcs(el.target);
+    if (el.target.hasAttribute('note') && _global.focused_note != el.target.getAttribute('note')){
+        console.log('pita');
+        make_editable(el.target.getAttribute('note'));
+    }
 })
 
-$forEach('.note', (el) => {
+function noteListener(el) {
     el.addEventListener('focusout', () => {
         if (_global.active) {
             let id = el.id;
             console.log('[focusout] ID: ' + id)
-            let textareas = el.childNodes[1].getElementsByTagName('textarea');
+            let textareas = el.getElementsByClassName('content')[0].getElementsByTagName('textarea');
 
             let note = newNote();
 
@@ -263,16 +297,22 @@ $forEach('.note', (el) => {
                 }
             }
 
-            let tags = el.getElementsByClassName('note_tags')[0].innerHTML;
-            tags = tags.split();
-            tags = tags.map((tag) => tag.slice(1, tag.length));
-            note.tags = tags;
+            if(el.getElementsByClassName('note_tags')[0]){
+                let tags = el.getElementsByClassName('note_tags')[0].innerHTML;
+                tags = tags.split();
+                tags = tags.map((tag) => tag.slice(1, tag.length));
+                note.tags = tags;
+            }
 
             el.style.border = "1px solid #393f50";
 
             make_html(id, note);
         }
     });
+}
+
+$forEach('.note', (el) => {
+    noteListener(el)
 })
 
 
