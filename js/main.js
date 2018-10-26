@@ -106,6 +106,9 @@ function autoadjust(el) {
 
     })
     el.addEventListener('keyup', (e) => {
+        // Making the first character uppercase doesnt work as expected!
+        if(el.value.charAt(0) !== el.value.charAt(0).toUpperCase())
+            el.value = el.value.charAt(0).toUpperCase() + el.value.slice(1, el.value.length);
         //=======saveNote()========//
         let textareas = el.parentNode.getElementsByTagName('textarea');
         let note_id = el.getAttribute('note'); // BUILD A FUNCTION TO RETRIEVE CURRENT NOTE ID
