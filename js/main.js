@@ -122,6 +122,20 @@ function autoadjust(el) {
     })
 }
 
+function createNote() {
+    let note_id = 0 // Setup _global meta data for notes and extract next ID
+    let note_elm = document.createElement('div');
+    note_elm.setAttribute('class', 'note');
+    note_elm.setAttribute('id', note_id);
+    note_elm.innerHTML = "<div class='content' note='" + note_id + "'><span class='note_head'>...</span></div>"
+
+    $('#notes').insertBefore(note_elm, $('#notes').childNodes[0]);
+    //autoadjust(note_elm);
+    note_funcs(note_elm);
+
+    return note_elm;
+}
+
 // CLEAN UP
 function updateTags(note_id) {
     let arr = getHashtags();
@@ -219,9 +233,17 @@ function splitTextarea(el) {
     return substring;
 }
 
+$('#new_note').addEventListener('click', () => {
+    createNote();
+});
+
+function note_funcs(el) {
+    if (el.hasAttribute('note') && _global.focused_note != el.getAttribute('note'))
+        make_editable(el.getAttribute('note'));
+}
+
 document.addEventListener('dblclick', (el) => {
-    if (el.target.hasAttribute('note') && _global.focused_note != el.target.getAttribute('note'))
-        make_editable(el.target.getAttribute('note'));
+    note_funcs(el.target);
 })
 
 $forEach('.note', (el) => {
