@@ -164,6 +164,10 @@ function getHashtags() {
     return arr;
 }
 
+function createNewNote() {
+
+}
+
 function make_editable(id) {
     let note = _global.notes[id]
     let note_html = $('#' + id).childNodes[1];
