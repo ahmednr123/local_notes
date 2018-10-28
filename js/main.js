@@ -114,24 +114,27 @@ function autoadjust(el) {
                 el.remove();
             });
         }
-
     })
+
     el.addEventListener('keyup', (e) => {
         // Making the first character uppercase doesnt work as expected!
-        //if (el.value.charAt(0) !== el.value.charAt(0).toUpperCase())
-        //el.value = el.value.charAt(0).toUpperCase() + el.value.slice(1, el.value.length);
-        //=======saveNote()========//
+        if (el.value.charAt(0) !== el.value.charAt(0).toUpperCase())
+            el.value = el.value.charAt(0).toUpperCase() + el.value.slice(1, el.value.length);
+
         let textareas = el.parentNode.getElementsByTagName('textarea');
-        let note_id = el.getAttribute('note'); // BUILD A FUNCTION TO RETRIEVE CURRENT NOTE ID
-        _global.notes[note_id].body = [];
-        _global.notes[note_id].heading = textareas[0].value;
-        for (let i = 1; i < textareas.length; i++) {
-            _global.notes[note_id].body.push(textareas[i].value);
-        }
-        // UPDATE saveNote() AND USE THAT INSTEAD
-        //=========================//
-        updateTags(el.getAttribute('note'))
-        el.style.height = '1px'
+        let note_id = _global.focused_note;
+
+        let note = newNote();
+        note.heading = textareas[0].value;
+
+        for (let i = 1; i < textareas.length; i++)
+            note.body.push(textareas[i].value);
+
+        //saveNote(note_id, note);
+
+        updateTags(el.getAttribute('note'));
+
+        el.style.height = '1px';
         el.style.height = (el.scrollHeight) + 'px';
     })
 }
@@ -341,13 +344,8 @@ function saveNote(id, note) {
         return
     }
 
-    let noteJson = JSON.parse(window.localStorage.getItem(id))
-    noteJson.heading = note.heading
-    noteJson.body = note.body
-    noteJson.tags = note.tags
-
-    _global.notes[id]
-    window.localStorage.setItem(id, JSON.stringify(noteJson))
+    _global.notes[id] = note;
+    window.localStorage.setItem(id, JSON.stringify(note))
 }
 
 function getNote(id) {
