@@ -46,6 +46,8 @@ _global.notes = {
     },
 };
 
+function __initiator__() {}
+
 function newNote() {
     return {
         heading: "",
@@ -72,17 +74,17 @@ function new_textarea(id, target, text) {
     textareaNode.setAttribute("note", id);
     textareaNode.setAttribute("tabindex", "-1");
 
-    let newTextarea = insertAfter(textareaNode, target);
-    newTextarea.value = text;
-    newTextarea.setSelectionRange(0, 0);
+    insertAfter(textareaNode, target);
+    textareaNode.value = text;
+    textareaNode.setSelectionRange(0, 0);
 
     tunnel(() => {
-        newTextarea.style.height = '17px';
-        newTextarea.style.height = (newTextarea.scrollHeight) + 'px';
-        newTextarea.focus();
+        textareaNode.style.height = '17px';
+        textareaNode.style.height = (textareaNode.scrollHeight) + 'px';
+        textareaNode.focus();
     });
 
-    autoadjust(newTextarea);
+    autoadjust(textareaNode);
 }
 
 function autoadjust(el) {
@@ -141,36 +143,30 @@ function createNote() {
     note_elm.setAttribute('id', note_id);
     note_elm.innerHTML = "<div class='content' note='" + note_id + "'></div>"
 
-    // Heading textarea (Change the newTextarea() function
     let textareaNode = document.createElement("textarea");
     textareaNode.setAttribute("class", "note_head_textarea");
     textareaNode.setAttribute("spellcheck", "false");
     textareaNode.setAttribute("note", note_id);
     textareaNode.setAttribute("tabindex", "-1");
 
-    let newTextarea = note_elm.getElementsByClassName('content')[0].appendChild(textareaNode);
-    // ==================== //
+    note_elm.getElementsByClassName('content')[0].appendChild(textareaNode);
 
     _global.notes[note_id] = newNote();
 
     $('#notes').insertBefore(note_elm, $('#notes').childNodes[0]);
-    //autoadjust(note_elm);
     noteListener(note_elm);
 
-    // newTextarea
     tunnel(() => {
-        newTextarea.style.height = '17px';
+        textareaNode.style.height = '17px';
         _global.focused_note = note_id;
-        newTextarea.focus();
+        textareaNode.focus();
     });
 
-    autoadjust(newTextarea);
-    // ============ 
+    autoadjust(textareaNode);
 
     return note_elm;
 }
 
-// CLEAN UP
 function updateTags(note_id) {
     let arr = getHashtags();
 
