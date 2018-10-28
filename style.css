@@ -83,15 +83,6 @@ god{
     margin-left: 5px;
 }
 
-#create{
-    font-size:14px;
-    float: right;
-    color: olivedrab;
-    border: 1px solid olivedrab;
-    padding: 6px 12px;
-    border-radius: 6px;
-}
-
 .note{
     position: relative;
     border-radius: 7px;
@@ -165,4 +156,8 @@ textarea{
 
 .hashtag:before{
     content:"#";
+}
+
+#new_note{
+    cursor:pointer;
 }

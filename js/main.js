@@ -22,6 +22,15 @@
     Functions:
     Double click - edit note
     ====================================================
+
+
+    ====================================================
+    META DATA
+   	====================================================
+   	Used to traverse notes one after the other.
+   	[prevNote:nextNote]
+   	If prevNotes or nextNote is null it is given a value
+   	of -1
 */
 
 let _global = {}
@@ -107,8 +116,8 @@ function autoadjust(el) {
     })
     el.addEventListener('keyup', (e) => {
         // Making the first character uppercase doesnt work as expected!
-        if(el.value.charAt(0) !== el.value.charAt(0).toUpperCase())
-            el.value = el.value.charAt(0).toUpperCase() + el.value.slice(1, el.value.length);
+        //if (el.value.charAt(0) !== el.value.charAt(0).toUpperCase())
+        //el.value = el.value.charAt(0).toUpperCase() + el.value.slice(1, el.value.length);
         //=======saveNote()========//
         let textareas = el.parentNode.getElementsByTagName('textarea');
         let note_id = el.getAttribute('note'); // BUILD A FUNCTION TO RETRIEVE CURRENT NOTE ID
@@ -141,13 +150,13 @@ function createNote() {
 
     let newTextarea = note_elm.getElementsByClassName('content')[0].appendChild(textareaNode);
     // ==================== //
-        
+
     _global.notes[note_id] = newNote();
 
     $('#notes').insertBefore(note_elm, $('#notes').childNodes[0]);
     //autoadjust(note_elm);
     noteListener(note_elm);
-    
+
     // newTextarea
     tunnel(() => {
         newTextarea.style.height = '17px';
@@ -164,20 +173,20 @@ function createNote() {
 // CLEAN UP
 function updateTags(note_id) {
     let arr = getHashtags();
-    
-    if(arr.length > 0){
-        if(!$('#'+note_id).getElementsByClassName('note_tags')[0]){
+
+    if (arr.length > 0) {
+        if (!$('#' + note_id).getElementsByClassName('note_tags')[0]) {
             let tag_elem = document.createElement('span');
             tag_elem.setAttribute('class', 'note_tags');
             tag_elem.setAttribute('note', note_id);
-            $('#'+note_id).appendChild(tag_elem);
+            $('#' + note_id).appendChild(tag_elem);
         }
     } else {
-        if($('#'+note_id).getElementsByClassName('note_tags')[0])
-            $('#'+note_id).getElementsByClassName('note_tags')[0].remove();
+        if ($('#' + note_id).getElementsByClassName('note_tags')[0])
+            $('#' + note_id).getElementsByClassName('note_tags')[0].remove();
         return;
     }
-    
+
     let tag_element = $('#' + note_id).getElementsByClassName('note_tags')[0];
     _global.notes[note_id].tags = arr;
     tag_element.innerHTML = '';
@@ -217,13 +226,9 @@ function getHashtags() {
     return arr;
 }
 
-function createNewNote() {
-
-}
-
 function make_editable(id) {
     let note = _global.notes[id]
-    let note_html = $('#'+id).getElementsByClassName('content')[0];
+    let note_html = $('#' + id).getElementsByClassName('content')[0];
     let html = '';
 
     html += '<textarea class="note_head_textarea" spellcheck="false" tabindex="-1" note="' + id + '">' + note.heading + '</textarea>'
@@ -281,7 +286,7 @@ $('#new_note').addEventListener('click', () => {
 });
 
 document.addEventListener('dblclick', (el) => {
-    if (el.target.hasAttribute('note') && _global.focused_note != el.target.getAttribute('note')){
+    if (el.target.hasAttribute('note') && _global.focused_note != el.target.getAttribute('note')) {
         console.log('pita');
         make_editable(el.target.getAttribute('note'));
     }
@@ -304,7 +309,7 @@ function noteListener(el) {
                 }
             }
 
-            if(el.getElementsByClassName('note_tags')[0]){
+            if (el.getElementsByClassName('note_tags')[0]) {
                 let tags = el.getElementsByClassName('note_tags')[0].innerHTML;
                 tags = tags.split();
                 tags = tags.map((tag) => tag.slice(1, tag.length));
