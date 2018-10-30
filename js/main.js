@@ -33,40 +33,6 @@
    	of -1
 */
 
-let _global = {}
-
-_global.active = true;
-_global.focused_note = '';
-
-_global.notes = {
-    "a01": {
-        heading: "Hello this is a note!",
-        body: ["Apparently we had reached a great height in the atmosphere, for the sky was a dead black, and the stars had ceased to twinkle. By the same illusion which lifts the horizon of the sea to the level of the spectator on a hillside, the sable cloud beneath was dished out."],
-        tags: ["illusion"]
-    },
-};
-
-function __initiator__() {}
-
-function newNote() {
-    return {
-        heading: "",
-        body: [],
-        tags: []
-    }
-}
-
-// To avoid focusout trigger
-function tunnel(func) {
-    _global.active = false;
-    func();
-    _global.active = true;
-}
-
-function insertAfter(newNode, referenceNode) {
-    return referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
-}
-
 function new_textarea(id, target, text) {
     let textareaNode = document.createElement("textarea");
     textareaNode.setAttribute("class", "note_parah_textarea");
@@ -325,47 +291,3 @@ function noteListener(el) {
 $forEach('.note', (el) => {
     noteListener(el)
 })
-
-
-/*
-	NOTES STRUCTURE 
-	=====================================
-	[ID]:{heading, body, tags}
-
-
-	ID STRUCTURE 
-	=====================================
-	bnote:[id]
-*/
-
-function saveNote(id, note) {
-    if (!window.localStorage.getItem(id)) {
-        window.localStorage.setItem(id, JSON.stringify(note))
-        return
-    }
-
-    _global.notes[id] = note;
-    window.localStorage.setItem(id, JSON.stringify(note))
-}
-
-function getNote(id) {
-    if (!window.localStorage.getItem(id))
-        return -1
-
-    return JSON.parse(window.localStorage.getItem(id))
-}
-
-function delNote(id) {
-    if (!window.localStorage.getItem(id))
-        return -1
-
-    window.localStorage.removeItem(id)
-}
-
-function delNotes() {
-    window.localStorage.clear()
-}
-
-function getNotes(from, to) {
-
-}
