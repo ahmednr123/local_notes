@@ -1,17 +1,31 @@
+function newMetaData() {
+    return {
+        prevNote: 0,
+        nextNote: 0
+    }
+}
+
 function parseMetaData(str) {
     let data = str.slice(1, str.length - 1)
     let arr = data.split(':')
     let json = {
-        prevNote: arr[0],
-        nextNote: arr[1]
+        prevNote: parseInt(arr[0]),
+        nextNote: parseInt(arr[1])
     }
+
+    if (arr[2]) json.base = arr[2];
+
     return json
 }
 
 function strMetaData(json) {
-    if (!json) return '[x:x]'
-    let str = '[' + json.prevNote + ':' + json.nextNote + ']'
-    return str
+    let str = '[' + json.prevNote + ':' + json.nextNote
+
+    if (json.base) str += ':' + json.base;
+
+    str += ']';
+
+    return str;
 }
 
 function newNote() {

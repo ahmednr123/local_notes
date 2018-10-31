@@ -11,8 +11,16 @@
 
 function saveNote(id, note) {
     if (!window.localStorage.getItem(id)) {
+        let meta = parseMetaData();
+        meta.prevNote = parseMetaData(_global._meta).nextNote;
+        meta.nextNote = 'x';
 
-        window.localStorage.setItem('bnote:' + id + ':meta', )
+        let p_meta = window.localStorage.getItem('bnote:' + meta.prevNote + ':meta')
+
+        p_meta.nextNote = id;
+
+        window.localStorage.setItem('bnote:' + meta.prevNote + ':meta', strMetaData(p_meta))
+        window.localStorage.setItem('bnote:' + id + ':meta', strMetaData(meta))
         window.localStorage.setItem('bnote:' + id, JSON.stringify(note))
         return
     }
@@ -25,14 +33,27 @@ function getNote(id) {
     if (!_global.notes[id] && !window.localStorage.getItem(id))
         return -1
 
+    if (_global.notes[id]) return _global.notes[id];
+
     return JSON.parse(window.localStorage.getItem(id))
 }
 
 function delNote(id) {
-    if (!window.localStorage.getItem(id))
+    if (!_global.notes[id] && !window.localStorage.getItem(id))
         return -1
 
-    window.localStorage.removeItem(id)
+    let meta = parseMetaData(window.localStorage.getItem('bnote:' + id + ':meta'))
+    let p_meta = parseMetaData(window.localStorage.getItem('bnote:' + meta.prevNote + ':meta'))
+    let n_meta = parseMetaData(window.localStorage.getItem('bnote:' + meta.nextNote + ':meta'))
+
+    p_meta.nextNote = meta.nextNote;
+    n_meta.prevNote = meta.prevNote;
+
+    window.localStorage.setItem('bnote:' + meta.prevNote + ':meta', strMetaData(p_meta))
+    window.localStorage.setItem('bnote:' + meta.nextNote + ':meta', strMetaData(n_meta))
+
+    window.localStorage.removeItem('bnote:' + id + ':meta')
+    window.localStorage.removeItem('bnote:' + id)
 }
 
 function delNotes() {
