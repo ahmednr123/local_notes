@@ -60,6 +60,6 @@ function delNotes() {
     window.localStorage.clear()
 }
 
-function getNotes(from, to) {
+function displayNotes(from, no_notes) {
 
 }
