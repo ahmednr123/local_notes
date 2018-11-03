@@ -96,11 +96,11 @@ function autoadjust(el) {
         for (let i = 1; i < textareas.length; i++)
             note.body.push(textareas[i].value);
 
-        //saveNote(note_id, note);
+        saveNote(note_id, note);
 
         updateTags(el.getAttribute('note'));
 
-        el.style.height = '1px';
+        //el.style.height = '1px';
         el.style.height = (el.scrollHeight) + 'px';
     })
 }

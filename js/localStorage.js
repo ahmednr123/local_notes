@@ -10,7 +10,7 @@
 */
 
 function saveNote(id, note) {
-    if (!window.localStorage.getItem(id)) {
+    /*if (!window.localStorage.getItem(id)) {
         let meta = parseMetaData();
         meta.prevNote = parseMetaData(_global._meta).nextNote;
         meta.nextNote = 'x';
@@ -23,10 +23,10 @@ function saveNote(id, note) {
         window.localStorage.setItem('bnote:' + id + ':meta', strMetaData(meta))
         window.localStorage.setItem('bnote:' + id, JSON.stringify(note))
         return
-    }
+    }*/
 
     _global.notes[id] = note;
-    window.localStorage.setItem(id, JSON.stringify(note))
+    //window.localStorage.setItem(id, JSON.stringify(note))
 }
 
 function getNote(id) {
