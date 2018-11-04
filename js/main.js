@@ -250,6 +250,35 @@ $('#new_note').addEventListener('click', () => {
     createNote();
 });
 
+document.addEventListener('contextmenu', (ev) => {
+    if (!ev.target.hasAttribute('note') && ev.target.id != 'note')
+        closeContextMenu();
+    else {
+        if (window.getSelection) {
+            let str = window.getSelection().toString()
+            if (str.length > 0) {
+
+            } else {
+                ev.preventDefault();
+                id = ev.target.getAttribute('note');
+                console.log(id);
+                contextMenu(ev.pageX, ev.pageY, id);
+                return false;
+            }
+        }
+
+    }
+})
+
+document.addEventListener('click', (ev) => {
+    console.log(ev.target.parentNode.tagName == 'CMENU')
+    if (ev.target.parentNode.tagName == 'CMENU') {
+        //DO CONTEXT MENU THINGS
+    }
+    if (!ev.target.hasAttribute('note') || ev.target.id != 'note')
+        closeContextMenu();
+})
+
 document.addEventListener('dblclick', (el) => {
     if (el.target.hasAttribute('note') && _global.focused_note != el.target.getAttribute('note')) {
         console.log('pita');

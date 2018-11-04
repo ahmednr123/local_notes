@@ -20,6 +20,21 @@ god{
     outline:none;
 }
 
+cmenu{
+    position:absolute;
+    display: none;
+    padding:10px 20px;
+    border-radius: 7px;
+    color: darkred;
+    font-weight: 800;
+    background-color: #f8fafd;
+    cursor: pointer;
+}
+
+cmenu > span:hover{
+    color:black;
+}
+
 #navbar{
     display: flex;
 }
