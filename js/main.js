@@ -274,6 +274,9 @@ document.addEventListener('click', (ev) => {
     console.log(ev.target.parentNode.tagName == 'CMENU')
     if (ev.target.parentNode.tagName == 'CMENU') {
         //DO CONTEXT MENU THINGS
+        let note_id = ev.target.parentNode.getAttribute('note')
+        closeContextMenu();
+        $('#' + note_id).remove();
     }
     if (!ev.target.hasAttribute('note') || ev.target.id != 'note')
         closeContextMenu();
@@ -289,12 +292,14 @@ document.addEventListener('dblclick', (el) => {
 function noteListener(el) {
     el.addEventListener('focusout', () => {
         if (_global.active) {
+            let empty = false;
             let id = el.id;
             console.log('[focusout] ID: ' + id)
             let textareas = el.getElementsByClassName('content')[0].getElementsByTagName('textarea');
 
             let note = newNote();
 
+            if (textareas[0].value.length == 0) empty = true;
             note.heading = textareas[0].value;
 
             if (textareas.length > 1) {
@@ -313,6 +318,9 @@ function noteListener(el) {
             el.style.border = "1px solid #393f50";
 
             make_html(id, note);
+
+            if (empty)
+                el.remove();
         }
     });
 }

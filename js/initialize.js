@@ -11,7 +11,7 @@ _global.notes = {
     },
 };
 
-let base_id = '1'
+_global.base_id = '1'
 
 let welcome_note = {
     heading: "Welcome to Beautiful notes!",
@@ -24,8 +24,9 @@ function __initiator__() {
         window.localStorage.setItem('bnote:meta', '[1:1:1]');
         window.localStorage.setItem('bnote:1', JSON.stringify(welcome_note))
         _global.notes['1'] = welcome_note;
-
+        // call displayNotes()
     }
+    // get note baseID
 }
 
 window.onscroll = function(ev) {
