@@ -22,12 +22,14 @@ let welcome_note = {
 
 function __initiator__() {
     if (!window.localStorage.getItem('bnote:meta')) {
-        window.localStorage.setItem('bnote:meta', '[1:1:1]');
+        window.localStorage.setItem('bnote:meta', JSON.stringify({begNote:'1', lastNote:'1', baseId: '1'}));
         window.localStorage.setItem('bnote:1', JSON.stringify(welcome_note))
         _global.notes['1'] = welcome_note;
-        // call displayNotes()
+        
     }
-    // get note baseID
+    
+
+    displayNotes(_global.curr_base_id, 5);
 }
 
 window.onscroll = function(ev) {
