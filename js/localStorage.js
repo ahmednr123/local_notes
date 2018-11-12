@@ -61,5 +61,10 @@ function delNotes() {
 }
 
 function displayNotes(from, no_notes) {
+    var newItem = document.createElement("note");
+    var textnode = document.createTextNode("Water");
+    newItem.appendChild(textnode);
 
+    var list = document.getElementById("myList");
+    list.insertBefore(newItem, list.childNodes[0]);
 }
