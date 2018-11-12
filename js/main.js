@@ -105,38 +105,38 @@ function autoadjust(el) {
     })
 }
 
-function rawNote(note) {
-    let note_id = getBaseId(); // Setup _global meta data for notes and extract next ID
+function rawNote(note, id) {
+    let note_id = id | getId(); // Setup _global meta data for notes and extract next ID
     let note_elm = document.createElement('div');
-    
+
     note_elm.setAttribute('class', 'note');
     note_elm.setAttribute('id', note_id);
     note_elm.innerHTML = "<div class='content' note='" + note_id + "'>";
-    
-    if(note.heading.length > 0){
-        note_elm.innerHTML += "<span class='note_head' note='"+note_id+"' >"+note.heading+"</span>";
 
-        for(let i = 0; i < note.body.length; i++)
-            note_elm.innerHTML += "<span class='note_parah' note='"+note_id+"' >"+note.body[i]+"</span>";
-        
+    if (note.heading.length > 0) {
+        note_elm.innerHTML += "<span class='note_head' note='" + note_id + "' >" + note.heading + "</span>";
+
+        for (let i = 0; i < note.body.length; i++)
+            note_elm.innerHTML += "<span class='note_parah' note='" + note_id + "' >" + note.body[i] + "</span>";
+
         note_elm.innerHTML += "</div>";
-        note_elm.innerHTML += "<div class='note_tags', note='"+note_id+"'>";
-        
-        for(let i = 0; i < note.tags.length; i++)
-            note_elm.innerHTML += "<span class='hashtag'>"+note_tags[i]+"</span>";
+        note_elm.innerHTML += "<div class='note_tags', note='" + note_id + "'>";
+
+        for (let i = 0; i < note.tags.length; i++)
+            note_elm.innerHTML += "<span class='hashtag'>" + note_tags[i] + "</span>";
     }
-    
+
     note_elm.innerHTML += "</div>";
 
     return note_elm;
 }
 
 function createNote(note) {
-    let note_id = getBaseId(); // Setup _global meta data for notes and extract next ID
-    
+    let note_id = getId(); // Setup _global meta data for notes and extract next ID
+
     _global.notes[note_id] = newNote();
-    
-    let note_elm = rawNote(_global.notes[note_id]);
+
+    let note_elm = rawNote(_global.notes[note_id], note_id);
 
     let textareaNode = document.createElement("textarea");
     textareaNode.setAttribute("class", "note_head_textarea");

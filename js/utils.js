@@ -47,6 +47,14 @@ function insertAfter(newNode, referenceNode) {
     return referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
 }
 
+function getId() {
+    return ++_global.base_id;
+}
+
+function getBaseId() {
+    return _global.curr_base_id;
+}
+
 function contextMenu(x, y, id) {
     console.log(id);
     closeContextMenu();

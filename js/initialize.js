@@ -12,6 +12,7 @@ _global.notes = {
 };
 
 _global.base_id = '1'
+_global.curr_base_id = '1'
 
 let welcome_note = {
     heading: "Welcome to Beautiful notes!",
@@ -32,6 +33,6 @@ function __initiator__() {
 window.onscroll = function(ev) {
     if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
         // you're at the bottom of the page
-        displayNotes(base_id, 5);
+        displayNotes(_global.curr_base_id, 5);
     }
 };
