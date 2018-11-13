@@ -6,6 +6,21 @@ function newNote() {
     }
 }
 
+function changeMeta(meta) {
+    let json = JSON.parse(window.localStorage.getItem('bnote:meta'))
+
+    if (meta.fNote)
+        json.fnote = meta.fNote;
+
+    if (meta.lNote)
+        json.lnote = meta.lNote;
+
+    if (meta.baseId)
+        json.baseId = meta.baseId;
+
+    window.localStorage.setItem('bnote:meta', JSON.stringify(json))
+}
+
 // To avoid focusout trigger
 function tunnel(func) {
     _global.active = false;

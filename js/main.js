@@ -106,27 +106,36 @@ function autoadjust(el) {
 }
 
 function rawNote(note, id) {
-    let note_id = id | getId(); // Setup _global meta data for notes and extract next ID
+    console.log(note)
+    let note_id = id;
+
+    if (!id)
+        note_id = getId(); // Setup _global meta data for notes and extract next ID
+    console.log(id + " " + note_id)
     let note_elm = document.createElement('div');
+    let html = '';
 
     note_elm.setAttribute('class', 'note');
-    note_elm.setAttribute('id', note_id);
-    note_elm.innerHTML = "<div class='content' note='" + note_id + "'>";
+    note_elm.id = note_id;
+
+    html += "<div class='content' note='" + note_id + "'>";
 
     if (note.heading.length > 0) {
-        note_elm.innerHTML += "<span class='note_head' note='" + note_id + "' >" + note.heading + "</span>";
+        html += "<span class='note_head' note='" + note_id + "' >" + note.heading + "</span>";
 
         for (let i = 0; i < note.body.length; i++)
-            note_elm.innerHTML += "<span class='note_parah' note='" + note_id + "' >" + note.body[i] + "</span>";
+            html += "<span class='note_parah' note='" + note_id + "' >" + note.body[i] + "</span>";
 
-        note_elm.innerHTML += "</div>";
-        note_elm.innerHTML += "<div class='note_tags', note='" + note_id + "'>";
+        html += "</div>";
+        html += "<div class='note_tags' note='" + note_id + "'>";
 
         for (let i = 0; i < note.tags.length; i++)
-            note_elm.innerHTML += "<span class='hashtag'>" + note_tags[i] + "</span>";
+            html += "<span class='hashtag'>" + note.tags[i] + "</span>";
     }
 
-    note_elm.innerHTML += "</div>";
+    html += "</div>";
+
+    note_elm.innerHTML = html;
 
     return note_elm;
 }
@@ -216,9 +225,12 @@ function getHashtags() {
 }
 
 function make_editable(id) {
+    console.log(id)
     let note = _global.notes[id]
     let note_html = $('#' + id).getElementsByClassName('content')[0];
     let html = '';
+
+    console.log("From make_editable: " + note)
 
     html += '<textarea class="note_head_textarea" spellcheck="false" tabindex="-1" note="' + id + '">' + note.heading + '</textarea>'
 
@@ -348,6 +360,10 @@ function noteListener(el) {
         }
     });
 }
+
+// COMMANDS
+
+__initiator__();
 
 $forEach('.note', (el) => {
     noteListener(el)
