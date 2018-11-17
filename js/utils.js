@@ -33,7 +33,13 @@ function insertAfter(newNode, referenceNode) {
 }
 
 function getId() {
-    return ++_global.base_id;
+	console.log("before: "+ _global.base_id);
+	let id = ++_global.base_id;
+	console.log("after: "+_global.base_id)
+	changeMeta({
+		baseId:toString(id)
+	})
+    return id;
 }
 
 function getBaseId() {

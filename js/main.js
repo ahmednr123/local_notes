@@ -54,6 +54,7 @@ function new_textarea(id, target, text) {
 }
 
 function autoadjust(el) {
+    updateTags(el.getAttribute('note'));
     el.addEventListener('keydown', (e) => {
 
         if (el.value.length > 1 && e.keyCode == 13) {
@@ -106,12 +107,12 @@ function autoadjust(el) {
 }
 
 function rawNote(note, id) {
-    console.log(note)
     let note_id = id;
 
     if (!id)
         note_id = getId(); // Setup _global meta data for notes and extract next ID
-    console.log(id + " " + note_id)
+    console.log("rn: " + id + " " + note_id)
+    console.log(note)
     let note_elm = document.createElement('div');
     let html = '';
 
@@ -226,6 +227,7 @@ function getHashtags() {
 
 function make_editable(id) {
     console.log(id)
+    console.log(_global.notes)
     let note = _global.notes[id]
     let note_html = $('#' + id).getElementsByClassName('content')[0];
     let html = '';
@@ -335,6 +337,8 @@ function noteListener(el) {
 
             let note = newNote();
 
+            console.log("NOTE LISTENER:"+ el.innerHTML)
+
             if (textareas[0].value.length == 0) empty = true;
             note.heading = textareas[0].value;
 
@@ -365,6 +369,6 @@ function noteListener(el) {
 
 __initiator__();
 
-$forEach('.note', (el) => {
+/*$forEach('.note', (el) => {
     noteListener(el)
-})
+})*/

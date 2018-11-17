@@ -6,9 +6,9 @@ let _global = {}
 _global.active = true;
 _global.focused_note = '';
 
-_global.last_note = '1'
-_global.base_id = '1'
-_global.curr_base_id = '1'
+_global.last_note = 1
+_global.base_id = 1
+_global.curr_base_id = 1
 
 _global.notes = {}
 
@@ -21,9 +21,9 @@ let welcome_note = {
 function __initiator__() {
     if (!window.localStorage.getItem('bnote:meta')) {
         window.localStorage.setItem('bnote:meta', JSON.stringify({
-            fNote: '1',
-            lNote: '1',
-            baseId: '1'
+            fNote: 1,
+            lNote: 1,
+            baseId: 1
         }));
         window.localStorage.setItem('bnote:1', JSON.stringify(welcome_note))
         window.localStorage.setItem('bnote:1:meta', JSON.stringify({
@@ -31,7 +31,7 @@ function __initiator__() {
             nextNote: 'x'
         }))
 
-        _global.notes['1'] = welcome_note;
+        _global.notes[1] = welcome_note;
 
         //return;
     }
