@@ -97,9 +97,11 @@ function autoadjust(el) {
         for (let i = 1; i < textareas.length; i++)
             note.body.push(textareas[i].value);
 
-        saveNote(note_id, note);
+        let tags = updateTags(el.getAttribute('note'));
 
-        updateTags(el.getAttribute('note'));
+        note.tags = tags?tags:[];
+
+        saveNote(note_id, note);
 
         //el.style.height = '1px';
         el.style.height = (el.scrollHeight) + 'px';
@@ -195,6 +197,8 @@ function updateTags(note_id) {
         let tag = arr[i];
         tag_element.innerHTML += '<span class="hashtag" note="' + note_id + '" >' + tag + '</span>';
     }
+
+    return arr;
 }
 
 function getHashtags() {
@@ -314,8 +318,9 @@ document.addEventListener('click', (ev) => {
     console.log(ev.target.parentNode.tagName == 'CMENU')
     if (ev.target.parentNode.tagName == 'CMENU') {
         //DO CONTEXT MENU THINGS
-        let note_id = ev.target.parentNode.getAttribute('note')
+        let note_id = ev.target.parentNode.getAttribute('note');
         closeContextMenu();
+        delNote(note_id);
         $('#' + note_id).remove();
     }
     if (!ev.target.hasAttribute('note') || ev.target.id != 'note')

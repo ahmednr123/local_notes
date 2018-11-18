@@ -82,10 +82,17 @@ function delNote(id) {
     if (meta.nextNote != 'x')
         window.localStorage.setItem('bnote:' + meta.nextNote + ':meta', JSON.stringify(n_meta))
 
-    if (id == _global.last_id) {
-        _global.last_id = meta.prevNote;
+    if (id == _global.last_note) {
+        _global.last_note = meta.prevNote;
         changeMeta({
-            lNote: _global.last_id
+            lNote: _global.last_note
+        });
+    }
+
+    if (id == _global.first_note) {
+        _global.first_note = meta.nextNote;
+        changeMeta({
+            fNote: _global.first_note
         });
     }
 

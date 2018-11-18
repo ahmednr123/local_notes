@@ -7,10 +7,13 @@ _global.active = true;
 _global.focused_note = '';
 
 _global.last_note = 1
+_global.first_note = 1
 _global.base_id = 1
 _global.curr_base_id = 1
 
 _global.notes = {}
+
+_global.tags = []
 
 let welcome_note = {
     heading: "Welcome to Beautiful notes!",
@@ -38,10 +41,9 @@ function __initiator__() {
 
     _global.base_id = JSON.parse(window.localStorage.getItem('bnote:meta')).baseId;
     _global.last_note = JSON.parse(window.localStorage.getItem('bnote:meta')).lNote;
+    _global.first_note = JSON.parse(window.localStorage.getItem('bnote:meta')).fNote;
 
-    let firstNote = JSON.parse(window.localStorage.getItem('bnote:meta')).fNote;
-
-    displayNotes(firstNote, 5, FROM_LAST);
+    displayNotes(_global.first_note, 5, FROM_LAST);
 }
 
 window.onscroll = function(ev) {
