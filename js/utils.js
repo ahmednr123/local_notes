@@ -10,10 +10,10 @@ function changeMeta(meta) {
     let json = JSON.parse(window.localStorage.getItem('bnote:meta'))
 
     if (meta.fNote)
-        json.fnote = meta.fNote;
+        json.fNote = meta.fNote;
 
     if (meta.lNote)
-        json.lnote = meta.lNote;
+        json.lNote = meta.lNote;
 
     if (meta.baseId)
         json.baseId = meta.baseId;
@@ -37,7 +37,7 @@ function getId() {
 	let id = ++_global.base_id;
 	console.log("after: "+_global.base_id)
 	changeMeta({
-		baseId:toString(id)
+		baseId:id
 	})
     return id;
 }

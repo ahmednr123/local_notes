@@ -127,11 +127,13 @@ function rawNote(note, id) {
         for (let i = 0; i < note.body.length; i++)
             html += "<span class='note_parah' note='" + note_id + "' >" + note.body[i] + "</span>";
 
-        html += "</div>";
-        html += "<div class='note_tags' note='" + note_id + "'>";
+        if(note.tags.length > 0){
+            html += "</div>";
+            html += "<div class='note_tags' note='" + note_id + "'>";
 
-        for (let i = 0; i < note.tags.length; i++)
-            html += "<span class='hashtag'>" + note.tags[i] + "</span>";
+            for (let i = 0; i < note.tags.length; i++)
+                html += "<span class='hashtag'>" + note.tags[i] + "</span>";
+        }
     }
 
     html += "</div>";

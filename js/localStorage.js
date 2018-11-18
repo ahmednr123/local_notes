@@ -12,13 +12,16 @@
 */
 
 function saveNote(id, note) {
-    if (!window.localStorage.getItem(id)) {
+    console.log("SaveNote: note.heading: "+note.heading)
+    if (!window.localStorage.getItem('bnote:'+id)) {
         let meta = {
-            prevNote: '',
+            prevNote: 'x',
             nextNote: 'x'
         };
 
         meta.prevNote = JSON.parse(window.localStorage.getItem('bnote:meta')).lNote;
+
+        console.log("prev: "+meta.prevNote+', current: '+id)
 
         let p_meta = JSON.parse(window.localStorage.getItem('bnote:' + meta.prevNote + ':meta'));
 
@@ -38,7 +41,7 @@ function saveNote(id, note) {
     }
 
     _global.notes[id] = note;
-    window.localStorage.setItem(id, JSON.stringify(note))
+    window.localStorage.setItem('bnote:'+id, JSON.stringify(note))
 }
 
 function getNote(id) {
@@ -96,9 +99,8 @@ function delNotes() {
 
 function displayNotes(from, no_notes, iterator) {
 
-    if (typeof(from) == 'number') from = toString(from);
+    //if (typeof(from) == 'number') from = toString(from);
 
-    let stop = false;
     let note_id = from;
     let note = JSON.parse(window.localStorage.getItem('bnote:' + note_id));
 
@@ -117,9 +119,9 @@ function displayNotes(from, no_notes, iterator) {
         note_wrapper.insertBefore(note_elm, note_wrapper.childNodes[0]);
         noteListener(note_elm);
 
-        if (iterator == 1)
+        if (iterator == FROM_LAST)
             note_id = JSON.parse(window.localStorage.getItem('bnote:' + note_id + ':meta')).nextNote;
-        else if (iterator == 0)
+        else if (iterator == FROM_BEGINNING)
             note_id = JSON.parse(window.localStorage.getItem('bnote:' + note_id + ':meta')).prevNote;
 
         if (note_id == 'x') return;
