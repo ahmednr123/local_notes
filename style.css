@@ -20,6 +20,21 @@ god{
     outline:none;
 }
 
+cmenu{
+    position:absolute;
+    display: none;
+    padding:10px 20px;
+    border-radius: 7px;
+    color: darkred;
+    font-weight: 800;
+    background-color: #f8fafd;
+    cursor: pointer;
+}
+
+cmenu > span:hover{
+    color:black;
+}
+
 #navbar{
     display: flex;
 }
@@ -37,6 +52,7 @@ god{
     font-size:14px;
     color: #f8fafd;
     display: flex;
+    position: relative;
     border-bottom:2px solid #393f50;
     width: calc(100% - 70px);
 }
@@ -160,4 +176,18 @@ textarea{
 
 #new_note{
     cursor:pointer;
+}
+
+#angel {
+    position: absolute;
+    background-color: rgba(0,0,0,0);
+    font-family: 'Inconsolata', monospace;
+    border:0;
+    outline:0;
+    font-size:14px;
+    color: rgba(248,250,253,0.4);
+    width: 100%;
+    z-index: -1;
+    left: 38.938px;
+    top:13px;
 }
