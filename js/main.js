@@ -130,7 +130,7 @@ function autoadjust(el) {
         for (let i = 1; i < textareas.length; i++)
             note.body.push(textareas[i].value);
 
-        //saveNote(note_id, note);
+        saveNote(note_id, note);
 
         updateTags(el.getAttribute('note'));
 
@@ -339,13 +339,13 @@ $forEach('.note', (el) => {
 */
 
 function saveNote(id, note) {
-    if (!window.localStorage.getItem(id)) {
+    /*if (!window.localStorage.getItem(id)) {
         window.localStorage.setItem(id, JSON.stringify(note))
         return
-    }
+    }*/
 
     _global.notes[id] = note;
-    window.localStorage.setItem(id, JSON.stringify(note))
+    //window.localStorage.setItem(id, JSON.stringify(note))
 }
 
 function getNote(id) {
