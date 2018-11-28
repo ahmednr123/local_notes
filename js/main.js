@@ -96,16 +96,12 @@ function autoadjust(el) {
 
         for (let i = 1; i < textareas.length; i++)
             note.body.push(textareas[i].value);
-
-<<<<<<< HEAD
-        saveNote(note_id, note);
-=======
+            
         saveNote(note_id, note, true);
 
         let tags = updateTags(el.getAttribute('note'));
 
         note.tags = tags?tags:[];
->>>>>>> e01e00b1dce300a975d4fc8873624b681ea749c5
 
         saveNote(note_id, note);
 
