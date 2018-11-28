@@ -11,7 +11,9 @@
     global meta - bnote:meta - {fNote, lNote, baseId}
 */
 
-function saveNote(id, note) {
+function saveNote(id, note, locally) {
+    locally = locally?true:false;
+
     console.log("SaveNote: note.heading: "+note.heading)
     if (!window.localStorage.getItem('bnote:'+id)) {
         let meta = {
@@ -41,7 +43,9 @@ function saveNote(id, note) {
     }
 
     _global.notes[id] = note;
-    window.localStorage.setItem('bnote:'+id, JSON.stringify(note))
+    
+    if(!locally)
+        window.localStorage.setItem('bnote:'+id, JSON.stringify(note))
 }
 
 function getNote(id) {

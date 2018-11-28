@@ -52,3 +52,24 @@ window.onscroll = function(ev) {
         displayNotes(_global.curr_base_id, 5, FROM_LAST);
     }
 };
+
+let a = []
+
+let promise = new Promise(function(resolve, reject) {
+    a.add('abc')
+    setTimeout(function(){
+        resolve('Returned')
+    }, 6000)
+})
+
+promise.then(function(value) {
+    console.log(value)
+})
+
+Array.prototype.add = function (elem) {
+    if(this.indexOf(elem) === -1){
+        this.push(elem)
+        return 1
+    } else 
+        return -1
+}

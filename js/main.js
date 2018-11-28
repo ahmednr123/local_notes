@@ -97,6 +97,8 @@ function autoadjust(el) {
         for (let i = 1; i < textareas.length; i++)
             note.body.push(textareas[i].value);
 
+        saveNote(note_id, note, true);
+
         let tags = updateTags(el.getAttribute('note'));
 
         note.tags = tags?tags:[];

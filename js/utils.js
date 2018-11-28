@@ -66,3 +66,11 @@ function closeContextMenu() {
         contextmenu.style.display = 'none';
     }
 }
+
+Array.prototype.add = function (elem) {
+    if(this.indexOf(elem) === -1){
+        this.push(elem)
+        return 1
+    } else 
+        return -1
+}
