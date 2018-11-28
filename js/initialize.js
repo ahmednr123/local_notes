@@ -22,26 +22,24 @@ let welcome_note = {
 }
 
 function __initiator__() {
-    if (!window.localStorage.getItem('bnote:meta')) {
-        window.localStorage.setItem('bnote:meta', JSON.stringify({
+    if (!window.localStorage.getItem('note:meta')) {
+        window.localStorage.setItem('note:meta', JSON.stringify({
             fNote: 1,
             lNote: 1,
             baseId: 1
         }));
-        window.localStorage.setItem('bnote:1', JSON.stringify(welcome_note))
-        window.localStorage.setItem('bnote:1:meta', JSON.stringify({
+        window.localStorage.setItem('note:1', JSON.stringify(welcome_note))
+        window.localStorage.setItem('note:1:meta', JSON.stringify({
             prevNote: 'x',
             nextNote: 'x'
         }))
 
         _global.notes[1] = welcome_note;
-
-        //return;
     }
 
-    _global.base_id = JSON.parse(window.localStorage.getItem('bnote:meta')).baseId;
-    _global.last_note = JSON.parse(window.localStorage.getItem('bnote:meta')).lNote;
-    _global.first_note = JSON.parse(window.localStorage.getItem('bnote:meta')).fNote;
+    _global.base_id = JSON.parse(window.localStorage.getItem('note:meta')).baseId;
+    _global.last_note = JSON.parse(window.localStorage.getItem('note:meta')).lNote;
+    _global.first_note = JSON.parse(window.localStorage.getItem('note:meta')).fNote;
 
     displayNotes(_global.first_note, 5, FROM_LAST);
 }
@@ -53,7 +51,7 @@ window.onscroll = function(ev) {
     }
 };
 
-let a = []
+/*let a = []
 
 let promise = new Promise(function(resolve, reject) {
     a.add('abc')
@@ -64,7 +62,7 @@ let promise = new Promise(function(resolve, reject) {
 
 promise.then(function(value) {
     console.log(value)
-})
+})*/
 
 Array.prototype.add = function (elem) {
     if(this.indexOf(elem) === -1){
