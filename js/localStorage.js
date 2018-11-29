@@ -15,23 +15,23 @@ function saveNote(id, note, locally) {
     locally = locally?true:false;
 
     console.log("SaveNote: note.heading: "+note.heading)
-    if (!window.localStorage.getItem('bnote:'+id)) {
+    if (!window.localStorage.getItem('note:'+id)) {
         let meta = {
             prevNote: 'x',
             nextNote: 'x'
         };
 
-        meta.prevNote = JSON.parse(window.localStorage.getItem('bnote:meta')).lNote;
+        meta.prevNote = JSON.parse(window.localStorage.getItem('note:meta')).lNote;
 
         console.log("prev: "+meta.prevNote+', current: '+id)
 
-        let p_meta = JSON.parse(window.localStorage.getItem('bnote:' + meta.prevNote + ':meta'));
+        let p_meta = JSON.parse(window.localStorage.getItem('note:' + meta.prevNote + ':meta'));
 
         p_meta.nextNote = id;
 
-        window.localStorage.setItem('bnote:' + meta.prevNote + ':meta', JSON.stringify(p_meta))
-        window.localStorage.setItem('bnote:' + id + ':meta', JSON.stringify(meta))
-        window.localStorage.setItem('bnote:' + id, JSON.stringify(note))
+        window.localStorage.setItem('note:' + meta.prevNote + ':meta', JSON.stringify(p_meta))
+        window.localStorage.setItem('note:' + id + ':meta', JSON.stringify(meta))
+        window.localStorage.setItem('note:' + id, JSON.stringify(note))
 
         changeMeta({
             lNote:id
@@ -43,13 +43,13 @@ function saveNote(id, note, locally) {
     }
 
     _global.notes[id] = note;
-    
+
     if(!locally)
-        window.localStorage.setItem('bnote:'+id, JSON.stringify(note))
+        window.localStorage.setItem('note:'+id, JSON.stringify(note))
 }
 
 function getNote(id) {
-    if (!_global.notes[id] && !window.localStorage.getItem('bnote:' + id))
+    if (!_global.notes[id] && !window.localStorage.getItem('note:' + id))
         return -1
 
     if (_global.notes[id]) return _global.notes[id];
@@ -64,7 +64,7 @@ function delNote(id) {
     let p_meta = 'x';
     let n_meta = 'x';
 
-    let meta = JSON.parse(window.localStorage.getItem('bnote:' + id + ':meta'))
+    let meta = JSON.parse(window.localStorage.getItem('note:' + id + ':meta'))
 
     if (meta.prevNote == 'x' && meta.nextNote == 'x') {
         delNotes();
@@ -72,19 +72,19 @@ function delNote(id) {
     }
 
     if (meta.prevNote != 'x')
-        p_meta = JSON.parse(window.localStorage.getItem('bnote:' + meta.prevNote + ':meta'))
+        p_meta = JSON.parse(window.localStorage.getItem('note:' + meta.prevNote + ':meta'))
 
     if (meta.nextNote != 'x')
-        n_meta = JSON.parse(window.localStorage.getItem('bnote:' + meta.nextNote + ':meta'))
+        n_meta = JSON.parse(window.localStorage.getItem('note:' + meta.nextNote + ':meta'))
 
     p_meta.nextNote = meta.nextNote;
     n_meta.prevNote = meta.prevNote;
 
     if (meta.prevNote != 'x')
-        window.localStorage.setItem('bnote:' + meta.prevNote + ':meta', JSON.stringify(p_meta))
+        window.localStorage.setItem('note:' + meta.prevNote + ':meta', JSON.stringify(p_meta))
 
     if (meta.nextNote != 'x')
-        window.localStorage.setItem('bnote:' + meta.nextNote + ':meta', JSON.stringify(n_meta))
+        window.localStorage.setItem('note:' + meta.nextNote + ':meta', JSON.stringify(n_meta))
 
     if (id == _global.last_note) {
         _global.last_note = meta.prevNote;
@@ -100,8 +100,8 @@ function delNote(id) {
         });
     }
 
-    window.localStorage.removeItem('bnote:' + id + ':meta')
-    window.localStorage.removeItem('bnote:' + id)
+    window.localStorage.removeItem('note:' + id + ':meta')
+    window.localStorage.removeItem('note:' + id)
 }
 
 function delNotes() {
@@ -113,7 +113,7 @@ function displayNotes(from, no_notes, iterator) {
     //if (typeof(from) == 'number') from = toString(from);
 
     let note_id = from;
-    let note = JSON.parse(window.localStorage.getItem('bnote:' + note_id));
+    let note = JSON.parse(window.localStorage.getItem('note:' + note_id));
 
     let inc = 0;
 
@@ -131,13 +131,13 @@ function displayNotes(from, no_notes, iterator) {
         noteListener(note_elm);
 
         if (iterator == FROM_LAST)
-            note_id = JSON.parse(window.localStorage.getItem('bnote:' + note_id + ':meta')).nextNote;
+            note_id = JSON.parse(window.localStorage.getItem('note:' + note_id + ':meta')).nextNote;
         else if (iterator == FROM_BEGINNING)
-            note_id = JSON.parse(window.localStorage.getItem('bnote:' + note_id + ':meta')).prevNote;
+            note_id = JSON.parse(window.localStorage.getItem('note:' + note_id + ':meta')).prevNote;
 
         if (note_id == 'x') return;
 
-        note = JSON.parse(window.localStorage.getItem('bnote:' + note_id));
+        note = JSON.parse(window.localStorage.getItem('note:' + note_id));
         _global.curr_base_id = note_id;
 
         if (++inc > no_notes)

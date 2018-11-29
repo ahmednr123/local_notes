@@ -362,6 +362,7 @@ function noteListener(el) {
                 tags = tags.split();
                 tags = tags.map((tag) => tag.slice(1, tag.length));
                 note.tags = tags;
+                save_tags(parseInt(id), note.tags)
             }
 
             el.style.border = "1px solid #393f50";

@@ -7,7 +7,7 @@ function newNote() {
 }
 
 function changeMeta(meta) {
-    let json = JSON.parse(window.localStorage.getItem('bnote:meta'))
+    let json = JSON.parse(window.localStorage.getItem('note:meta'))
 
     if (meta.fNote)
         json.fNote = meta.fNote;
@@ -18,7 +18,7 @@ function changeMeta(meta) {
     if (meta.baseId)
         json.baseId = meta.baseId;
 
-    window.localStorage.setItem('bnote:meta', JSON.stringify(json))
+    window.localStorage.setItem('note:meta', JSON.stringify(json))
 }
 
 // To avoid focusout trigger
@@ -67,10 +67,16 @@ function closeContextMenu() {
     }
 }
 
-Array.prototype.add = function (elem) {
-    if(this.indexOf(elem) === -1){
-        this.push(elem)
-        return 1
-    } else 
-        return -1
+function save_tags(id, tags) {
+    for(let i = 0; i < tags.length; i++){
+        _global.tags.add(tags[i])
+
+        let temp = []
+        if(window.localStorage.getItem('tag:' + tags[i]))
+            temp = JSON.parse(window.localStorage.getItem('tag:' + tags[i]))
+        temp.add(id)
+
+        window.localStorage.setItem('tag:'+tags[i], JSON.stringify(temp))
+        window.localStorage.setItem('tag:meta', JSON.stringify(_global.tags))
+    }
 }

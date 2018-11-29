@@ -35,11 +35,16 @@ function __initiator__() {
         }))
 
         _global.notes[1] = welcome_note;
+
+        save_tags(1, welcome_note.tags);
     }
 
     _global.base_id = JSON.parse(window.localStorage.getItem('note:meta')).baseId;
     _global.last_note = JSON.parse(window.localStorage.getItem('note:meta')).lNote;
     _global.first_note = JSON.parse(window.localStorage.getItem('note:meta')).fNote;
+
+    // Load tags
+    //_global.tags = JSON.parse(window.localStorage.getItem('tag:meta'))
 
     displayNotes(_global.first_note, 5, FROM_LAST);
 }
@@ -50,6 +55,20 @@ window.onscroll = function(ev) {
         displayNotes(_global.curr_base_id, 5, FROM_LAST);
     }
 };
+
+/*
+    ======================================
+
+    tag:meta
+    tag:[name] -> tag details
+
+    ======================================
+*/
+
+function load_tags() {
+    _global.tags = JSON.parse(window.localStorage('tag:meta'))
+
+}
 
 /*let a = []
 
@@ -66,7 +85,7 @@ promise.then(function(value) {
 
 Array.prototype.add = function (elem) {
     if(this.indexOf(elem) === -1){
-        this.push(elem)
+        this.unshift(elem)
         return 1
     } else 
         return -1
