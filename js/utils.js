@@ -68,8 +68,12 @@ function closeContextMenu() {
 }
 
 function save_tags(id, tags) {
+    tags = JSON.stringify(tags)
+    tags = JSON.parse(tags)
     for(let i = 0; i < tags.length; i++){
+        
         _global.tags.add(tags[i])
+        console.log('save_tags: tag['+i+']: '+tags[i])
 
         let temp = []
         if(window.localStorage.getItem('tag:' + tags[i]))

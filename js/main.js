@@ -115,8 +115,7 @@ function rawNote(note, id) {
 
     if (!id)
         note_id = getId(); // Setup _global meta data for notes and extract next ID
-    console.log("rn: " + id + " " + note_id)
-    console.log(note)
+
     let note_elm = document.createElement('div');
     let html = '';
 
@@ -234,13 +233,9 @@ function getHashtags() {
 }
 
 function make_editable(id) {
-    console.log(id)
-    console.log(_global.notes)
     let note = _global.notes[id]
     let note_html = $('#' + id).getElementsByClassName('content')[0];
     let html = '';
-
-    console.log("From make_editable: " + note)
 
     html += '<textarea class="note_head_textarea" spellcheck="false" tabindex="-1" note="' + id + '">' + note.heading + '</textarea>'
 
@@ -263,13 +258,8 @@ function make_editable(id) {
 }
 
 function make_html(id, note) {
-    let _note = _global.notes[id]
     let note_html = $('#' + id).getElementsByClassName('content')[0];
     let html = '';
-
-    _note.heading = note.heading;
-    _note.body = note.body;
-    _note.tags = note.tags;
 
     html += '<span class="note_head" note="' + id + '">' + note.heading + '</span>';
 
@@ -307,7 +297,6 @@ document.addEventListener('contextmenu', (ev) => {
             } else {
                 ev.preventDefault();
                 id = ev.target.getAttribute('note');
-                console.log(id);
                 contextMenu(ev.pageX, ev.pageY, id);
                 return false;
             }
@@ -317,7 +306,6 @@ document.addEventListener('contextmenu', (ev) => {
 })
 
 document.addEventListener('click', (ev) => {
-    console.log(ev.target.parentNode.tagName == 'CMENU')
     if (ev.target.parentNode.tagName == 'CMENU') {
         //DO CONTEXT MENU THINGS
         let note_id = ev.target.parentNode.getAttribute('note');
@@ -330,23 +318,19 @@ document.addEventListener('click', (ev) => {
 })
 
 document.addEventListener('dblclick', (el) => {
-    if (el.target.hasAttribute('note') && _global.focused_note != el.target.getAttribute('note')) {
-        console.log('pita');
+    if (el.target.hasAttribute('note') && _global.focused_note != el.target.getAttribute('note'))
         make_editable(el.target.getAttribute('note'));
-    }
 })
 
 function noteListener(el) {
     el.addEventListener('focusout', () => {
         if (_global.active) {
+            
             let empty = false;
             let id = el.id;
-            console.log('[focusout] ID: ' + id)
             let textareas = el.getElementsByClassName('content')[0].getElementsByTagName('textarea');
 
             let note = newNote();
-
-            console.log("NOTE LISTENER:"+ el.innerHTML)
 
             if (textareas[0].value.length == 0) empty = true;
             note.heading = textareas[0].value;
@@ -358,19 +342,28 @@ function noteListener(el) {
             }
 
             if (el.getElementsByClassName('note_tags')[0]) {
-                let tags = el.getElementsByClassName('note_tags')[0].innerHTML;
-                tags = tags.split();
-                tags = tags.map((tag) => tag.slice(1, tag.length));
+                let tag_elems = el.getElementsByClassName('note_tags')[0].getElementsByClassName('hashtag');
+                let tags = []
+
+                for(let i = 0; i < tag_elems.length; i++)
+                    tags.push(tag_elems[i].innerHTML)
+
                 note.tags = tags;
+                
                 save_tags(parseInt(id), note.tags)
             }
 
             el.style.border = "1px solid #393f50";
 
+            
+
             make_html(id, note);
 
             if (empty)
                 el.remove();
+
+            clean_tags()
+            
         }
     });
 }

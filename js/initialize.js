@@ -90,3 +90,42 @@ Array.prototype.add = function (elem) {
     } else 
         return -1
 }
+
+Array.prototype.remove = function (elem) {
+    const index = this.indexOf(elem);
+    this.splice(index, 1);
+}
+
+function delete_tag(tagname){
+    _global.tags.remove(tagname)
+    window.localStorage.setItem('tag:meta', JSON.stringify(_global.tags))
+    console.log('tagID= tag:' + tagname)
+    window.localStorage.removeItem('tag:'+tagname)
+}
+
+function clean_tags() {
+    let promise = new Promise(function(resolve, reject) {
+        let tag_json = {}
+        for(let tag of _global.tags)
+            tag_json[tag] = 0
+
+        for(let note in _global.notes){
+            let tags = _global.notes[note].tags
+            
+            for(let j = 0; j < tags.length; j++)
+                tag_json[tags[j]]++
+        }
+
+        console.log('TAGS PRESENT: '+JSON.stringify(tag_json))
+
+        for(let tag in tag_json)
+            if(tag_json[tag] == 0)
+                delete_tag(tag)
+
+        resolve('Cleaing done!')
+    })
+    
+    promise.then(function(value) {
+        console.log(value)
+    })
+}

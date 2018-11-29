@@ -12,9 +12,9 @@
 */
 
 function saveNote(id, note, locally) {
+
     locally = locally?true:false;
 
-    console.log("SaveNote: note.heading: "+note.heading)
     if (!window.localStorage.getItem('note:'+id)) {
         let meta = {
             prevNote: 'x',
@@ -22,8 +22,6 @@ function saveNote(id, note, locally) {
         };
 
         meta.prevNote = JSON.parse(window.localStorage.getItem('note:meta')).lNote;
-
-        console.log("prev: "+meta.prevNote+', current: '+id)
 
         let p_meta = JSON.parse(window.localStorage.getItem('note:' + meta.prevNote + ':meta'));
 
@@ -110,8 +108,6 @@ function delNotes() {
 
 function displayNotes(from, no_notes, iterator) {
 
-    //if (typeof(from) == 'number') from = toString(from);
-
     let note_id = from;
     let note = JSON.parse(window.localStorage.getItem('note:' + note_id));
 
@@ -120,7 +116,6 @@ function displayNotes(from, no_notes, iterator) {
     if (!note) return -1;
 
     while (1) {
-        console.log("noteID: "+note_id+", note: "+note)
         _global.notes[note_id] = note;
 
         let note_elm = rawNote(note, note_id);
