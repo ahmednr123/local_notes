@@ -2,7 +2,8 @@ function newNote() {
     return {
         heading: "",
         body: [],
-        tags: []
+        tags: [],
+        date: null
     }
 }
 
@@ -83,4 +84,83 @@ function save_tags(id, tags) {
         window.localStorage.setItem('tag:'+tags[i], JSON.stringify(temp))
         window.localStorage.setItem('tag:meta', JSON.stringify(_global.tags))
     }
+}
+
+function getDate() {
+
+    let date = new Date();
+
+    let year = date.getFullYear();
+
+    let month = date.getMonth() + 1;
+
+    let day = date.getDate();
+
+    return {year, month, day}
+
+}
+
+console.log(getDate().year)
+
+function noteDate (dateStr) {
+
+    this.parseString = function (str, dontDoIt) {
+        let json = str.split('-')
+        json = json.map((val) => parseInt(val))
+        
+        let year = json[0]
+        let month = json[1]
+        let day = json[2]
+
+        if(!dontDoIt)
+            this.date = {year, month, day}
+
+        return {year, month, day}
+    }
+
+    if(dateStr)
+        this.date = this.parseString(dateStr, true)
+    else
+        this.date = getDate()
+
+    this.getString = function () {
+        let json = this.date
+        console.log('date converted to string: '+ json.year + '-' + json.month + '-' + json.day)
+        return json.year + '-' + json.month + '-' + json.day
+    }
+}
+
+function dateElement(date) {
+    if(!date){ 
+        console.log('Error: date cannot be empty')
+        return -1
+    }
+
+    let new_date = document.createElement('div')
+    new_date.setAttribute('class', 'date_element')
+    new_date.setAttribute('notes','0')
+    new_date.setAttribute('id', date)
+    new_date.innerHTML = date
+
+    return new_date
+}
+
+function removeNote(el) {
+    let date = _global.notes[el.id].date
+    let notes = parseInt($('#'+date).getAttribute('notes'))
+    el.remove()
+    $('#'+date).setAttribute('notes', --notes)
+    killDateElements()
+}
+
+function killDateElements() {
+    let dates = document.getElementsByClassName('date_element')
+    let badElements = []
+
+    for(let i = 0; i < dates.length; i++)
+        if(dates[i].getAttribute('notes') == '0')
+            badElements.push(i)
+
+    for(let id of badElements)
+        dates[id].remove()
 }

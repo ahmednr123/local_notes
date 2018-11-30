@@ -1,28 +1,12 @@
-/*_global.auto_active = true;
-
-$('#_search').addEventListener('keyup', () => {
-	if($('#_search').value.length > 0 && _global.auto_active){
-		$('#angel').innerHTML = $('#_search').value;
-		$('#angel').innerHTML += 'aaa';
-	}
-})
-
-$('#_search').addEventListener('keydown', (e) => {
-	if($('#_search').value.length <= 1 && e.keyCode == 8){
-		$('#angel').innerHTML = '';
-		_global.auto_active = false;
-	} else {
-		_global.auto_active = true;
-	}
-})*/
-
 let autocomplete = $('#angel');
 let search = $('#_search');
 
 search.addEventListener('keyup', () => {
 	if(search.value.length > 0 ) {
-		let input = search.value;
-    autocomplete.innerHTML = input;
+		let search_value = search.value.trim()
+		let input_arr = search_value.split(' ');
+		let input = input_arr[input_arr.length - 1]
+    autocomplete.innerHTML = search.value;
     
     let regex = new RegExp('^' + input + '.*', 'i');
     
@@ -36,6 +20,9 @@ search.addEventListener('keyup', () => {
 })
 
 search.addEventListener('keydown', (e) => {
+	if (e.keyCode == 39){
+		search.value = autocomplete.innerHTML
+	}
 	if(search.value.length <= 1 && e.keyCode == 8){
 		autocomplete.innerHTML = '';
   }

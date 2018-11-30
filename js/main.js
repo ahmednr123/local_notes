@@ -96,7 +96,7 @@ function autoadjust(el) {
 
         for (let i = 1; i < textareas.length; i++)
             note.body.push(textareas[i].value);
-            
+
         saveNote(note_id, note, true);
 
         let tags = updateTags(el.getAttribute('note'));
@@ -161,7 +161,18 @@ function createNote(note) {
 
     note_elm.getElementsByClassName('content')[0].appendChild(textareaNode);
 
-    $('#notes').insertBefore(note_elm, $('#notes').childNodes[0]);
+    let last_date = $('.date_element')
+    let now = new noteDate();
+
+    if(last_date.innerHTML == now.getString()) {
+        insertAfter(note_elm, last_date)
+    } else {
+        let new_date = dateElement(now.getString())
+        $('#notes').insertBefore(note_elm, $('#notes').childNodes[0]);
+        $('#notes').insertBefore(new_date, $('#notes').childNodes[0]);
+    }
+
+    //$('#notes').insertBefore(note_elm, $('#notes').childNodes[0]);
     noteListener(note_elm);
 
     tunnel(() => {
@@ -171,6 +182,10 @@ function createNote(note) {
     });
 
     autoadjust(textareaNode);
+
+    let date_elem = $('#'+now.getString())
+    let notes = parseInt(date_elem.getAttribute('notes'))
+    date_elem.setAttribute('notes', ++notes)
 
     return note_elm;
 }
@@ -311,7 +326,8 @@ document.addEventListener('click', (ev) => {
         let note_id = ev.target.parentNode.getAttribute('note');
         closeContextMenu();
         delNote(note_id);
-        $('#' + note_id).remove();
+        removeNote($('#' + note_id))
+        //$('#' + note_id).remove();
     }
     if (!ev.target.hasAttribute('note') || ev.target.id != 'note')
         closeContextMenu();
@@ -332,7 +348,7 @@ function noteListener(el) {
 
             let note = newNote();
 
-            if (textareas[0].value.length == 0) empty = true;
+            if (textareas[0].value.length <= 1) empty = true;
             note.heading = textareas[0].value;
 
             if (textareas.length > 1) {
@@ -350,19 +366,20 @@ function noteListener(el) {
 
                 note.tags = tags;
                 
-                save_tags(parseInt(id), note.tags)
+                if(!empty)
+                    save_tags(parseInt(id), note.tags)
             }
 
             el.style.border = "1px solid #393f50";
 
-            
-
             make_html(id, note);
 
             if (empty)
-                el.remove();
+                removeNote(el)
+                //el.remove(); 
 
-            clean_tags()
+            if (!empty)
+                clean_tags()
             
         }
     });

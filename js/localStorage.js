@@ -20,6 +20,12 @@ function saveNote(id, note, locally) {
             prevNote: 'x',
             nextNote: 'x'
         };
+        
+        let now = new noteDate()
+        note.date = now.getString()
+
+        _global.notes[id] = {}
+        _global.notes[id].date = note.date
 
         meta.prevNote = JSON.parse(window.localStorage.getItem('note:meta')).lNote;
 
@@ -40,7 +46,12 @@ function saveNote(id, note, locally) {
         return
     }
 
-    _global.notes[id] = note;
+    _global.notes[id].heading = note.heading;
+    _global.notes[id].body = note.body;
+    _global.notes[id].tags = note.tags;
+    note.date = _global.notes[id].date
+
+    console.log(JSON.stringify(note))
 
     if(!locally)
         window.localStorage.setItem('note:'+id, JSON.stringify(note))
@@ -122,12 +133,25 @@ function displayNotes(from, no_notes, iterator) {
 
         let note_wrapper = $('#notes');
 
-        note_wrapper.insertBefore(note_elm, note_wrapper.childNodes[0]);
+        if(_global.last_date != note.date){
+            let new_date = dateElement(note.date)
+            new_date.setAttribute('notes', 1)
+            //note_wrapper.insertBefore(new_date, note_wrapper.childNodes[0])
+            note_wrapper.append(new_date)
+            _global.last_date = note.date
+        } else {
+            let date_elem = $('#'+note.date)
+            let notes = parseInt(date_elem.getAttribute('notes'))
+            date_elem.setAttribute('notes', ++notes)
+        }
+
+        //note_wrapper.insertBefore(note_elm, note_wrapper.childNodes[0]);
+        note_wrapper.append(note_elm)
         noteListener(note_elm);
 
-        if (iterator == FROM_LAST)
+        if (iterator == FROM_BEGINNING)
             note_id = JSON.parse(window.localStorage.getItem('note:' + note_id + ':meta')).nextNote;
-        else if (iterator == FROM_BEGINNING)
+        else if (iterator == FROM_LAST )
             note_id = JSON.parse(window.localStorage.getItem('note:' + note_id + ':meta')).prevNote;
 
         if (note_id == 'x') return;
