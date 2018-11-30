@@ -124,7 +124,7 @@ function displayNotes(from, no_notes, iterator) {
 
     let inc = 0;
 
-    if (!note) return -1;
+    if (!note || $('#'+note_id)) return -1;
 
     while (1) {
         _global.notes[note_id] = note;
