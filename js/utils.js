@@ -1,3 +1,5 @@
+let days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thrusday', 'friday', 'saturday']
+
 function newNote() {
     return {
         heading: "",
@@ -96,8 +98,7 @@ function getDate() {
 
     let day = date.getDate();
 
-    return {year, month, day}
-
+    return {date, year, month, day}
 }
 
 console.log(getDate().year)
@@ -115,7 +116,7 @@ function noteDate (dateStr) {
         if(!dontDoIt)
             this.date = {year, month, day}
 
-        return {year, month, day}
+        return {date: null, year, month, day}
     }
 
     if(dateStr)

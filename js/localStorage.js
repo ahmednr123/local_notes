@@ -159,7 +159,7 @@ function displayNotes(from, no_notes, iterator) {
         note = JSON.parse(window.localStorage.getItem('note:' + note_id));
         _global.curr_base_id = note_id;
 
-        if (++inc > no_notes)
+        if (++inc > no_notes - 1)
             return;
     }
 

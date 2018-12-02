@@ -27,3 +27,12 @@ search.addEventListener('keydown', (e) => {
 		autocomplete.innerHTML = '';
   }
 })
+
+let i_got_lazy = setInterval(() => {
+	if(search.value.length == 0){
+		autocomplete.innerHTML = '';
+		$forEach('.note', (el) => {
+			el.style.display = 'block'
+		})
+	}
+}, 200)

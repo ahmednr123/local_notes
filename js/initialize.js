@@ -1,6 +1,8 @@
 const FROM_LAST = 1;
 const FROM_BEGINNING = 0;
 
+const MAX_SEARCH = 20;
+
 let _global = {}
 
 _global.active = true
