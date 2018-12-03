@@ -1,7 +1,7 @@
 /*
 	NOTES STRUCTURE 
 	=====================================
-	[ID]:{heading, body, tags}
+	[ID]:{heading, body, tags, date}
 
 
 	ID STRUCTURE 
@@ -147,7 +147,7 @@ function displayNotes(from, no_notes, iterator) {
 
         //note_wrapper.insertBefore(note_elm, note_wrapper.childNodes[0]);
         note_wrapper.append(note_elm)
-        noteListener(note_elm);
+        noteFocusout(note_elm);
 
         if (iterator == FROM_BEGINNING)
             note_id = JSON.parse(window.localStorage.getItem('note:' + note_id + ':meta')).nextNote;

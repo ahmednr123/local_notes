@@ -50,11 +50,11 @@ function new_textarea(id, target, text) {
         textareaNode.focus();
     });
 
-    autoadjust(textareaNode);
+    noteListener(textareaNode);
 }
 
-function autoadjust(el) {
-    updateTags(el.getAttribute('note'));
+function noteListener(el) {
+    //updateTags(el.getAttribute('note'));
     el.addEventListener('keydown', (e) => {
 
         if (el.value.length > 1 && e.keyCode == 13) {
@@ -173,7 +173,8 @@ function createNote(note) {
     }
 
     //$('#notes').insertBefore(note_elm, $('#notes').childNodes[0]);
-    noteListener(note_elm);
+    noteFocusout(note_elm);
+    //noteListener(note_elm);
 
     tunnel(() => {
         textareaNode.style.height = '17px';
@@ -181,7 +182,7 @@ function createNote(note) {
         textareaNode.focus();
     });
 
-    autoadjust(textareaNode);
+    noteListener(textareaNode);
 
     let date_elem = $('#'+now.getString())
     let notes = parseInt(date_elem.getAttribute('notes'))
@@ -268,7 +269,7 @@ function make_editable(id) {
     $('#' + id).style.border = "1px solid #f2c94e";
 
     $forEach('textarea', (el) => {
-        autoadjust(el);
+        noteListener(el);
     })
 }
 
@@ -338,7 +339,7 @@ document.addEventListener('dblclick', (el) => {
         make_editable(el.target.getAttribute('note'));
 })
 
-function noteListener(el) {
+function noteFocusout(el) {
     el.addEventListener('focusout', () => {
         if (_global.active) {
             

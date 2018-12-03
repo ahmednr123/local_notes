@@ -2,9 +2,9 @@
 
 search.addEventListener('keyup', (e) => {
 
-    if (search.value.length == 0) return
+    if (search.value.length == 0 || search.value.trim().length == 0) return
 
-    let tags = autocomplete.innerHTML.trim().split(' ')
+    let tags = autocomplete.innerHTML.split(' ') //.trim().split(' ')
     let possible_notes_json = {}
     let possible_notes = []
 
@@ -35,11 +35,15 @@ search.addEventListener('keyup', (e) => {
         let start = _global.last_note
         let go_on = true
         let iter = 0
+        $forEach('.date_element', (el) => {
+			el.style.display = 'none'
+		})
         while(go_on) {
             if(possible_notes.indexOf(start) !== -1 && (possible_notes_json[start] == largest)){
                 console.log(start)
                 displayNotes(start, 1, FROM_LAST)
                 $('#'+start).style.display = 'block'
+                $('#'+_global.notes[start].date).style.display = 'block'
             } else if (_global.notes[start]) {
                 $('#'+start).style.display = 'none'
             }

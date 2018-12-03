@@ -3,7 +3,8 @@ let search = $('#_search');
 
 search.addEventListener('keyup', () => {
 	if(search.value.length > 0 ) {
-		let search_value = search.value.trim()
+		if (search.value.trim().length == 0) return
+		let search_value = search.value //.trim()
 		let input_arr = search_value.split(' ');
 		let input = input_arr[input_arr.length - 1]
     autocomplete.innerHTML = search.value;
@@ -32,6 +33,9 @@ let i_got_lazy = setInterval(() => {
 	if(search.value.length == 0){
 		autocomplete.innerHTML = '';
 		$forEach('.note', (el) => {
+			el.style.display = 'block'
+		})
+		$forEach('.date_element', (el) => {
 			el.style.display = 'block'
 		})
 	}
