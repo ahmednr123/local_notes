@@ -12,8 +12,14 @@ search.addEventListener('keyup', (e) => {
 
     for(let i = 0; i < tags.length; i++){
         for(let j = 0; j < _global.tags.length; j++){
-            if(tags[i] == _global.tags[j]){
+            let tag_name = _global.tags[j]
+            if(tag_name[0] == '_') tag_name = tag_name.slice(1)
+            console.log(tag_name)
+            if(tags[i] == tag_name){
                 let notes = JSON.parse(window.localStorage.getItem('tag:'+tags[i]))
+                if(notes == null)
+                    notes = JSON.parse(window.localStorage.getItem('tag:_'+tags[i]))
+                console.log('FROM SEARCH: '+typeof(notes))
                 console.log('FROM SEARCH: '+notes)
                 notes.map((note_id) => {
                     console.log('FROM INSIDE SEARCH: '+notes)

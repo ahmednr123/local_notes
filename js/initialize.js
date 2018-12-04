@@ -17,6 +17,8 @@ _global.curr_base_id = 1
 _global.notes = {}
 _global.tags = []
 
+_global.months = ["january","february","march","april","may","june","july","august","september","october","november","december"]
+
 let welcome_note = {
     heading: "Welcome to Beautiful notes!",
     body: ["A simple notes writing application that enables users to write their notes in an elegant manner. This note acts as the beginning of a new #writing #experiance!"],

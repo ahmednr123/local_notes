@@ -4,7 +4,7 @@ let search = $('#_search');
 search.addEventListener('keyup', () => {
 	if(search.value.length > 0 ) {
 		if (search.value.trim().length == 0) return
-		let search_value = search.value //.trim()
+		let search_value = search.value.toLowerCase() //.trim()
 		let input_arr = search_value.split(' ');
 		let input = input_arr[input_arr.length - 1]
     autocomplete.innerHTML = search.value;
@@ -12,8 +12,10 @@ search.addEventListener('keyup', () => {
     let regex = new RegExp('^' + input + '.*', 'i');
     
     for(let i = 0; i < _global.tags.length; i++){
-    	if(_global.tags[i].match(regex)){
-      	autocomplete.innerHTML += _global.tags[i].slice(input.length, _global.tags[i].length);
+			let tag_name = _global.tags[i]
+			if(tag_name[0] == '_') tag_name = tag_name.slice(1)
+    	if(tag_name.match(regex)){
+      	autocomplete.innerHTML += tag_name.slice(input.length, tag_name.length);
         break;
       }
     }

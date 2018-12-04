@@ -113,6 +113,8 @@ function noteListener(el) {
 function rawNote(note, id) {
     let note_id = id;
 
+    let no_tag = true;
+
     if (!id)
         note_id = getId(); // Setup _global meta data for notes and extract next ID
 
@@ -131,11 +133,18 @@ function rawNote(note, id) {
             html += "<span class='note_parah' note='" + note_id + "' >" + note.body[i] + "</span>";
 
         if(note.tags.length > 0){
-            html += "</div>";
-            html += "<div class='note_tags' note='" + note_id + "'>";
+            let temp = ""
+            temp += "</div>";
+            temp += "<div class='note_tags' note='" + note_id + "'>";
 
-            for (let i = 0; i < note.tags.length; i++)
-                html += "<span class='hashtag'>" + note.tags[i] + "</span>";
+            for (let i = 0; i < note.tags.length; i++){
+                if(note.tags[i][0] != '_'){
+                    no_tag = false;
+                    temp += "<span class='hashtag'>" + note.tags[i] + "</span>";
+                }
+            }
+            if (!no_tag) 
+                html += temp;
         }
     }
 
@@ -235,7 +244,7 @@ function getHashtags() {
             }
             if (hash) {
                 if (!/^[a-z0-9]+$/i.test(text[i]) || i == text.length) {
-                    arr.push(buffer);
+                    arr.push(buffer.toLowerCase());
                     buffer = '';
                     hash = false;
                 } else {
@@ -358,18 +367,18 @@ function noteFocusout(el) {
                 }
             }
 
-            if (el.getElementsByClassName('note_tags')[0]) {
-                let tag_elems = el.getElementsByClassName('note_tags')[0].getElementsByClassName('hashtag');
-                let tags = []
+            //if (el.getElementsByClassName('note_tags')[0]) {
+                //let tag_elems = el.getElementsByClassName('note_tags')[0].getElementsByClassName('hashtag');
+                //let tags = []
 
-                for(let i = 0; i < tag_elems.length; i++)
-                    tags.push(tag_elems[i].innerHTML)
+                /*for(let i = 0; i < tag_elems.length; i++)
+                    tags.push(tag_elems[i].innerHTML)*/
 
-                note.tags = tags;
+                note.tags = _global.notes[id].tags;
                 
                 if(!empty)
                     save_tags(parseInt(id), note.tags)
-            }
+            //}
 
             el.style.border = "1px solid #393f50";
 
