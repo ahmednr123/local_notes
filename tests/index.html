@@ -1,0 +1,43 @@
+<html>
+<head>
+	<script src="test_lib.js"></script>
+	<style>
+		table {
+			border:1px solid lightgrey;
+		}
+		th,td{
+			padding:10px;
+			width: 120px;
+			border:1px solid lightgrey;
+			text-align: center;
+		}
+	</style>
+</head>
+<body>
+	<table>
+		<tr>
+			<th>Test Case</th>
+			<th>Test Data</th>
+			<th>Expected Result</th>
+			<th>Actual Result</th>
+			<th>Remark</th>
+		</tr>
+		<tr>
+			<th>Passing appropriate arguments</th>
+			<td>func = function(){}</td>
+			<td>*No error</td>
+			<td>*No error</td>
+			<td>Working Properly</td>
+		</tr>
+		<tr>
+			<th>Passing a 'number' as an argument</th>
+			<td>func = 12345</td>
+			<td>Expected: 'function', Got: 'number'</td>
+			<td>Expected: 'function', Got: 'number'</td>
+			<td>Working Properly</td>
+		</tr>
+	</table>
+	
+	<script src="main.js"></script>
+</body>
+</html>
