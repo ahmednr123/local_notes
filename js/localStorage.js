@@ -1,7 +1,7 @@
 /*
 	NOTES STRUCTURE 
 	=====================================
-	[ID]:{heading, body, tags}
+	[ID]:{heading, body, tags, date}
 
 
 	ID STRUCTURE 
@@ -12,26 +12,40 @@
 */
 
 function saveNote(id, note, locally) {
+
     locally = locally?true:false;
 
-    console.log("SaveNote: note.heading: "+note.heading)
-    if (!window.localStorage.getItem('bnote:'+id)) {
+    if (!window.localStorage.getItem('note:'+id)) {
         let meta = {
             prevNote: 'x',
             nextNote: 'x'
         };
+        
+        let now = new noteDate()
+        note.date = now.getString()
 
-        meta.prevNote = JSON.parse(window.localStorage.getItem('bnote:meta')).lNote;
+        _global.notes[id] = {}
+        _global.notes[id].date = note.date
 
-        console.log("prev: "+meta.prevNote+', current: '+id)
+        json_date = now.parseString(now.getString(), true)
 
-        let p_meta = JSON.parse(window.localStorage.getItem('bnote:' + meta.prevNote + ':meta'));
+        _global.notes[id].date_tags = []
+        _global.notes[id].date_tags.add(_global.months[json_date.month - 1].toLowerCase())
+        _global.notes[id].date_tags.add(json_date.year + '')
+        _global.notes[id].date_tags.add(json_date.month + '')
+        _global.notes[id].date_tags.add(json_date.day + '')
+
+        save_tags(id, _global.notes[id].date_tags);
+
+        meta.prevNote = JSON.parse(window.localStorage.getItem('note:meta')).lNote;
+
+        let p_meta = JSON.parse(window.localStorage.getItem('note:' + meta.prevNote + ':meta'));
 
         p_meta.nextNote = id;
 
-        window.localStorage.setItem('bnote:' + meta.prevNote + ':meta', JSON.stringify(p_meta))
-        window.localStorage.setItem('bnote:' + id + ':meta', JSON.stringify(meta))
-        window.localStorage.setItem('bnote:' + id, JSON.stringify(note))
+        window.localStorage.setItem('note:' + meta.prevNote + ':meta', JSON.stringify(p_meta))
+        window.localStorage.setItem('note:' + id + ':meta', JSON.stringify(meta))
+        window.localStorage.setItem('note:' + id, JSON.stringify(note))
 
         changeMeta({
             lNote:id
@@ -42,14 +56,20 @@ function saveNote(id, note, locally) {
         return
     }
 
-    _global.notes[id] = note;
-    
+    _global.notes[id].heading = note.heading;
+    _global.notes[id].body = note.body;
+    _global.notes[id].tags = note.tags// = _global.notes[id].tags;
+    note.date_tags = _global.notes[id].date_tags
+    note.date = _global.notes[id].date
+
+    console.log(JSON.stringify(note))
+
     if(!locally)
-        window.localStorage.setItem('bnote:'+id, JSON.stringify(note))
+        window.localStorage.setItem('note:'+id, JSON.stringify(note))
 }
 
 function getNote(id) {
-    if (!_global.notes[id] && !window.localStorage.getItem('bnote:' + id))
+    if (!_global.notes[id] && !window.localStorage.getItem('note:' + id))
         return -1
 
     if (_global.notes[id]) return _global.notes[id];
@@ -64,7 +84,7 @@ function delNote(id) {
     let p_meta = 'x';
     let n_meta = 'x';
 
-    let meta = JSON.parse(window.localStorage.getItem('bnote:' + id + ':meta'))
+    let meta = JSON.parse(window.localStorage.getItem('note:' + id + ':meta'))
 
     if (meta.prevNote == 'x' && meta.nextNote == 'x') {
         delNotes();
@@ -72,19 +92,19 @@ function delNote(id) {
     }
 
     if (meta.prevNote != 'x')
-        p_meta = JSON.parse(window.localStorage.getItem('bnote:' + meta.prevNote + ':meta'))
+        p_meta = JSON.parse(window.localStorage.getItem('note:' + meta.prevNote + ':meta'))
 
     if (meta.nextNote != 'x')
-        n_meta = JSON.parse(window.localStorage.getItem('bnote:' + meta.nextNote + ':meta'))
+        n_meta = JSON.parse(window.localStorage.getItem('note:' + meta.nextNote + ':meta'))
 
     p_meta.nextNote = meta.nextNote;
     n_meta.prevNote = meta.prevNote;
 
     if (meta.prevNote != 'x')
-        window.localStorage.setItem('bnote:' + meta.prevNote + ':meta', JSON.stringify(p_meta))
+        window.localStorage.setItem('note:' + meta.prevNote + ':meta', JSON.stringify(p_meta))
 
     if (meta.nextNote != 'x')
-        window.localStorage.setItem('bnote:' + meta.nextNote + ':meta', JSON.stringify(n_meta))
+        window.localStorage.setItem('note:' + meta.nextNote + ':meta', JSON.stringify(n_meta))
 
     if (id == _global.last_note) {
         _global.last_note = meta.prevNote;
@@ -100,8 +120,8 @@ function delNote(id) {
         });
     }
 
-    window.localStorage.removeItem('bnote:' + id + ':meta')
-    window.localStorage.removeItem('bnote:' + id)
+    window.localStorage.removeItem('note:' + id + ':meta')
+    window.localStorage.removeItem('note:' + id)
 }
 
 function delNotes() {
@@ -110,37 +130,47 @@ function delNotes() {
 
 function displayNotes(from, no_notes, iterator) {
 
-    //if (typeof(from) == 'number') from = toString(from);
-
     let note_id = from;
-    let note = JSON.parse(window.localStorage.getItem('bnote:' + note_id));
+    let note = JSON.parse(window.localStorage.getItem('note:' + note_id));
 
     let inc = 0;
 
-    if (!note) return -1;
+    if (!note || $('#'+note_id)) return -1;
 
     while (1) {
-        console.log("noteID: "+note_id+", note: "+note)
         _global.notes[note_id] = note;
 
         let note_elm = rawNote(note, note_id);
 
         let note_wrapper = $('#notes');
 
-        note_wrapper.insertBefore(note_elm, note_wrapper.childNodes[0]);
-        noteListener(note_elm);
+        if(_global.last_date != note.date){
+            let new_date = dateElement(note.date)
+            new_date.setAttribute('notes', 1)
+            //note_wrapper.insertBefore(new_date, note_wrapper.childNodes[0])
+            note_wrapper.append(new_date)
+            _global.last_date = note.date
+        } else {
+            let date_elem = $('#'+note.date)
+            let notes = parseInt(date_elem.getAttribute('notes'))
+            date_elem.setAttribute('notes', ++notes)
+        }
 
-        if (iterator == FROM_LAST)
-            note_id = JSON.parse(window.localStorage.getItem('bnote:' + note_id + ':meta')).nextNote;
-        else if (iterator == FROM_BEGINNING)
-            note_id = JSON.parse(window.localStorage.getItem('bnote:' + note_id + ':meta')).prevNote;
+        //note_wrapper.insertBefore(note_elm, note_wrapper.childNodes[0]);
+        note_wrapper.append(note_elm)
+        noteFocusout(note_elm);
+
+        if (iterator == FROM_BEGINNING)
+            note_id = JSON.parse(window.localStorage.getItem('note:' + note_id + ':meta')).nextNote;
+        else if (iterator == FROM_LAST )
+            note_id = JSON.parse(window.localStorage.getItem('note:' + note_id + ':meta')).prevNote;
 
         if (note_id == 'x') return;
 
-        note = JSON.parse(window.localStorage.getItem('bnote:' + note_id));
+        note = JSON.parse(window.localStorage.getItem('note:' + note_id));
         _global.curr_base_id = note_id;
 
-        if (++inc > no_notes)
+        if (++inc > no_notes - 1)
             return;
     }
 

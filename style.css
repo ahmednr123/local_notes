@@ -35,6 +35,13 @@ cmenu > span:hover{
     color:black;
 }
 
+.date_element {
+    color: white;
+    text-align: center;
+    opacity: 0.5;
+    margin-bottom: 10px;
+}
+
 #navbar{
     display: flex;
 }

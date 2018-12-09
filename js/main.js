@@ -50,11 +50,11 @@ function new_textarea(id, target, text) {
         textareaNode.focus();
     });
 
-    autoadjust(textareaNode);
+    noteListener(textareaNode);
 }
 
-function autoadjust(el) {
-    updateTags(el.getAttribute('note'));
+function noteListener(el) {
+    //updateTags(el.getAttribute('note'));
     el.addEventListener('keydown', (e) => {
 
         if (el.value.length > 1 && e.keyCode == 13) {
@@ -115,8 +115,7 @@ function rawNote(note, id) {
 
     if (!id)
         note_id = getId(); // Setup _global meta data for notes and extract next ID
-    console.log("rn: " + id + " " + note_id)
-    console.log(note)
+
     let note_elm = document.createElement('div');
     let html = '';
 
@@ -132,11 +131,15 @@ function rawNote(note, id) {
             html += "<span class='note_parah' note='" + note_id + "' >" + note.body[i] + "</span>";
 
         if(note.tags.length > 0){
-            html += "</div>";
-            html += "<div class='note_tags' note='" + note_id + "'>";
+            let temp = ""
+            temp += "</div>";
+            temp += "<div class='note_tags' note='" + note_id + "'>";
 
-            for (let i = 0; i < note.tags.length; i++)
-                html += "<span class='hashtag'>" + note.tags[i] + "</span>";
+            for (let i = 0; i < note.tags.length; i++){
+                temp += "<span class='hashtag'>" + note.tags[i] + "</span>";
+            }
+
+            html += temp;
         }
     }
 
@@ -162,8 +165,20 @@ function createNote(note) {
 
     note_elm.getElementsByClassName('content')[0].appendChild(textareaNode);
 
-    $('#notes').insertBefore(note_elm, $('#notes').childNodes[0]);
-    noteListener(note_elm);
+    let last_date = $('.date_element')
+    let now = new noteDate();
+
+    if(last_date.innerHTML == now.getString()) {
+        insertAfter(note_elm, last_date)
+    } else {
+        let new_date = dateElement(now.getString())
+        $('#notes').insertBefore(note_elm, $('#notes').childNodes[0]);
+        $('#notes').insertBefore(new_date, $('#notes').childNodes[0]);
+    }
+
+    //$('#notes').insertBefore(note_elm, $('#notes').childNodes[0]);
+    noteFocusout(note_elm);
+    //noteListener(note_elm);
 
     tunnel(() => {
         textareaNode.style.height = '17px';
@@ -171,7 +186,11 @@ function createNote(note) {
         textareaNode.focus();
     });
 
-    autoadjust(textareaNode);
+    noteListener(textareaNode);
+
+    let date_elem = $('#'+now.getString())
+    let notes = parseInt(date_elem.getAttribute('notes'))
+    date_elem.setAttribute('notes', ++notes)
 
     return note_elm;
 }
@@ -193,7 +212,8 @@ function updateTags(note_id) {
     }
 
     let tag_element = $('#' + note_id).getElementsByClassName('note_tags')[0];
-    _global.notes[note_id].tags = arr;
+    //for (let val of arr)
+    _global.notes[note_id].tags = arr
     tag_element.innerHTML = '';
     for (let i = 0; i < arr.length; i++) {
         let tag = arr[i];
@@ -220,7 +240,7 @@ function getHashtags() {
             }
             if (hash) {
                 if (!/^[a-z0-9]+$/i.test(text[i]) || i == text.length) {
-                    arr.push(buffer);
+                    arr.push(buffer.toLowerCase());
                     buffer = '';
                     hash = false;
                 } else {
@@ -234,13 +254,9 @@ function getHashtags() {
 }
 
 function make_editable(id) {
-    console.log(id)
-    console.log(_global.notes)
     let note = _global.notes[id]
     let note_html = $('#' + id).getElementsByClassName('content')[0];
     let html = '';
-
-    console.log("From make_editable: " + note)
 
     html += '<textarea class="note_head_textarea" spellcheck="false" tabindex="-1" note="' + id + '">' + note.heading + '</textarea>'
 
@@ -258,18 +274,13 @@ function make_editable(id) {
     $('#' + id).style.border = "1px solid #f2c94e";
 
     $forEach('textarea', (el) => {
-        autoadjust(el);
+        noteListener(el);
     })
 }
 
 function make_html(id, note) {
-    let _note = _global.notes[id]
     let note_html = $('#' + id).getElementsByClassName('content')[0];
     let html = '';
-
-    _note.heading = note.heading;
-    _note.body = note.body;
-    _note.tags = note.tags;
 
     html += '<span class="note_head" note="' + id + '">' + note.heading + '</span>';
 
@@ -307,7 +318,6 @@ document.addEventListener('contextmenu', (ev) => {
             } else {
                 ev.preventDefault();
                 id = ev.target.getAttribute('note');
-                console.log(id);
                 contextMenu(ev.pageX, ev.pageY, id);
                 return false;
             }
@@ -317,38 +327,34 @@ document.addEventListener('contextmenu', (ev) => {
 })
 
 document.addEventListener('click', (ev) => {
-    console.log(ev.target.parentNode.tagName == 'CMENU')
     if (ev.target.parentNode.tagName == 'CMENU') {
         //DO CONTEXT MENU THINGS
         let note_id = ev.target.parentNode.getAttribute('note');
         closeContextMenu();
         delNote(note_id);
-        $('#' + note_id).remove();
+        removeNote($('#' + note_id))
+        //$('#' + note_id).remove();
     }
     if (!ev.target.hasAttribute('note') || ev.target.id != 'note')
         closeContextMenu();
 })
 
 document.addEventListener('dblclick', (el) => {
-    if (el.target.hasAttribute('note') && _global.focused_note != el.target.getAttribute('note')) {
-        console.log('pita');
+    if (el.target.hasAttribute('note') && _global.focused_note != el.target.getAttribute('note'))
         make_editable(el.target.getAttribute('note'));
-    }
 })
 
-function noteListener(el) {
+function noteFocusout(el) {
     el.addEventListener('focusout', () => {
         if (_global.active) {
+            
             let empty = false;
             let id = el.id;
-            console.log('[focusout] ID: ' + id)
             let textareas = el.getElementsByClassName('content')[0].getElementsByTagName('textarea');
 
             let note = newNote();
 
-            console.log("NOTE LISTENER:"+ el.innerHTML)
-
-            if (textareas[0].value.length == 0) empty = true;
+            if (textareas[0].value.length <= 1) empty = true;
             note.heading = textareas[0].value;
 
             if (textareas.length > 1) {
@@ -357,19 +363,30 @@ function noteListener(el) {
                 }
             }
 
-            if (el.getElementsByClassName('note_tags')[0]) {
-                let tags = el.getElementsByClassName('note_tags')[0].innerHTML;
-                tags = tags.split();
-                tags = tags.map((tag) => tag.slice(1, tag.length));
-                note.tags = tags;
-            }
+            //if (el.getElementsByClassName('note_tags')[0]) {
+                //let tag_elems = el.getElementsByClassName('note_tags')[0].getElementsByClassName('hashtag');
+                //let tags = []
+
+                /*for(let i = 0; i < tag_elems.length; i++)
+                    tags.push(tag_elems[i].innerHTML)*/
+
+                note.tags = _global.notes[id].tags;
+                
+                if(!empty)
+                    save_tags(parseInt(id), note.tags)
+            //}
 
             el.style.border = "1px solid #393f50";
 
             make_html(id, note);
 
             if (empty)
-                el.remove();
+                removeNote(el)
+                //el.remove(); 
+
+            if (!empty)
+                clean_tags()
+            
         }
     });
 }
