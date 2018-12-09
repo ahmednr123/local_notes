@@ -13,7 +13,7 @@ search.addEventListener('keyup', () => {
     
     for(let i = 0; i < _global.tags.length; i++){
 			let tag_name = _global.tags[i]
-			if(tag_name[0] == '_') tag_name = tag_name.slice(1)
+			//if(tag_name[0] == '_') tag_name = tag_name.slice(1)
     	if(tag_name.match(regex)){
       	autocomplete.innerHTML += tag_name.slice(input.length, tag_name.length);
         break;

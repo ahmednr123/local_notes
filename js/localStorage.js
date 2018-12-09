@@ -29,11 +29,13 @@ function saveNote(id, note, locally) {
 
         json_date = now.parseString(now.getString(), true)
 
-        _global.notes[id].tags = []
-        _global.notes[id].tags.add('_' + _global.months[json_date.month - 1].toLowerCase())
-        _global.notes[id].tags.add('_' + json_date.year + '')
-        _global.notes[id].tags.add('_' + json_date.month + '')
-        _global.notes[id].tags.add('_' + json_date.day + '')
+        _global.notes[id].date_tags = []
+        _global.notes[id].date_tags.add(_global.months[json_date.month - 1].toLowerCase())
+        _global.notes[id].date_tags.add(json_date.year + '')
+        _global.notes[id].date_tags.add(json_date.month + '')
+        _global.notes[id].date_tags.add(json_date.day + '')
+
+        save_tags(id, _global.notes[id].date_tags);
 
         meta.prevNote = JSON.parse(window.localStorage.getItem('note:meta')).lNote;
 
@@ -56,7 +58,8 @@ function saveNote(id, note, locally) {
 
     _global.notes[id].heading = note.heading;
     _global.notes[id].body = note.body;
-    note.tags = _global.notes[id].tags;
+    _global.notes[id].tags = note.tags// = _global.notes[id].tags;
+    note.date_tags = _global.notes[id].date_tags
     note.date = _global.notes[id].date
 
     console.log(JSON.stringify(note))

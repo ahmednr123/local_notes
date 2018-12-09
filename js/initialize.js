@@ -23,6 +23,7 @@ let welcome_note = {
     heading: "Welcome to Beautiful notes!",
     body: ["A simple notes writing application that enables users to write their notes in an elegant manner. This note acts as the beginning of a new #writing #experiance!"],
     tags: ["writing", "experiance"],
+    date_tags: ["2018","10","20","october"],
     date: null
 }
 
@@ -45,7 +46,9 @@ function __initiator__() {
 
         _global.notes[1] = welcome_note;
 
-        save_tags(1, welcome_note.tags);
+        let tags = welcome_note.tags.concat(welcome_note.date_tags)
+
+        save_tags(1,  tags);
     }
 
     _global.base_id = JSON.parse(window.localStorage.getItem('note:meta')).baseId;
@@ -107,7 +110,7 @@ function clean_tags() {
 
         for(let note in _global.notes){
             console.log(_global.notes[note])
-            let tags = _global.notes[note].tags
+            let tags = _global.notes[note].tags.concat(_global.notes[note].date_tags)
             if(tags.length == 0) continue;
             
             for(let j = 0; j < tags.length; j++)

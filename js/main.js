@@ -113,8 +113,6 @@ function noteListener(el) {
 function rawNote(note, id) {
     let note_id = id;
 
-    let no_tag = true;
-
     if (!id)
         note_id = getId(); // Setup _global meta data for notes and extract next ID
 
@@ -138,13 +136,10 @@ function rawNote(note, id) {
             temp += "<div class='note_tags' note='" + note_id + "'>";
 
             for (let i = 0; i < note.tags.length; i++){
-                if(note.tags[i][0] != '_'){
-                    no_tag = false;
-                    temp += "<span class='hashtag'>" + note.tags[i] + "</span>";
-                }
+                temp += "<span class='hashtag'>" + note.tags[i] + "</span>";
             }
-            if (!no_tag) 
-                html += temp;
+
+            html += temp;
         }
     }
 
@@ -217,7 +212,8 @@ function updateTags(note_id) {
     }
 
     let tag_element = $('#' + note_id).getElementsByClassName('note_tags')[0];
-    _global.notes[note_id].tags = arr;
+    //for (let val of arr)
+    _global.notes[note_id].tags = arr
     tag_element.innerHTML = '';
     for (let i = 0; i < arr.length; i++) {
         let tag = arr[i];

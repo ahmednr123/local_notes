@@ -3,6 +3,7 @@ function newNote() {
         heading: "",
         body: [],
         tags: [],
+        date_tags: [],
         date: null
     }
 }
@@ -24,6 +25,8 @@ function changeMeta(meta) {
 
 // To avoid focusout trigger
 function tunnel(func) {
+    if(typeof(func) !== 'function')
+        console.log('Debug Error: tunnel(arg) expected argument: function but got: '+typeof(func))
     _global.active = false;
     func();
     _global.active = true;

@@ -13,7 +13,6 @@ search.addEventListener('keyup', (e) => {
     for(let i = 0; i < tags.length; i++){
         for(let j = 0; j < _global.tags.length; j++){
             let tag_name = _global.tags[j]
-            if(tag_name[0] == '_') tag_name = tag_name.slice(1)
             console.log(tag_name)
             if(tags[i] == tag_name){
                 let notes = JSON.parse(window.localStorage.getItem('tag:'+tags[i]))
@@ -37,27 +36,25 @@ search.addEventListener('keyup', (e) => {
         }
     }
 
-    //for(let note_id in possible_notes){
-        let start = _global.last_note
-        let go_on = true
-        let iter = 0
-        $forEach('.date_element', (el) => {
-			el.style.display = 'none'
-		})
-        while(go_on) {
-            if(possible_notes.indexOf(start) !== -1 && (possible_notes_json[start] == largest)){
-                console.log(start)
-                displayNotes(start, 1, FROM_LAST)
-                $('#'+start).style.display = 'block'
-                $('#'+_global.notes[start].date).style.display = 'block'
-            } else if (_global.notes[start]) {
-                $('#'+start).style.display = 'none'
-            }
-
-            start = JSON.parse(window.localStorage.getItem('note:'+start+':meta')).prevNote
-            
-            if(start == 'x' || iter++ >= MAX_SEARCH) 
-                go_on = false
+    let start = _global.last_note
+    let go_on = true
+    let iter = 0
+    $forEach('.date_element', (el) => {
+        el.style.display = 'none'
+    })
+    while(go_on) {
+        displayNotes(start, 1, FROM_LAST)
+        if(possible_notes.indexOf(start) !== -1 && (possible_notes_json[start] == largest)){
+            console.log(start)
+            $('#'+start).style.display = 'block'
+            $('#'+_global.notes[start].date).style.display = 'block'
+        } else if (_global.notes[start]) {
+            $('#'+start).style.display = 'none'
         }
-    //}
+
+        start = JSON.parse(window.localStorage.getItem('note:'+start+':meta')).prevNote
+        
+        if(start == 'x' || iter++ >= MAX_SEARCH) 
+            go_on = false
+    }
 })
