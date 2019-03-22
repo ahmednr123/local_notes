@@ -3,3 +3,5 @@
 A simple notes app using local storage.
 
 Design taken from: https://dribbble.com/shots/5193682-daily-notes-dark-mode
+
+Live at: http://beautifulnotes.herokuapp.com/
